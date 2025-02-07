@@ -1,4 +1,4 @@
-package com.example.weather.getweather
+package com.example.weather.weather
 
 import android.content.Context
 import android.util.Log
@@ -25,7 +25,7 @@ fun getIconWeather(city: String, state: MutableState<String>, context: Context){
                 Log.i("MyLog", "Weather now: ${state.value}")
             }
             catch (e: Exception){
-                Log.e("MyLog", "$e")
+                Log.e("MyLog", "Error: ${e.message}")
             }
         },
         {

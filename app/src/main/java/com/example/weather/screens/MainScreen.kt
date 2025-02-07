@@ -2,6 +2,7 @@ package com.example.weather.screens
 
 import android.content.Context
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -14,6 +15,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -30,10 +33,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.weather.R
-import com.example.weather.getweather.getIconWeather
-import com.example.weather.getweather.getTemp
-import com.example.weather.getweather.getTempLikeFeels
+import com.example.weather.weather.getIconWeather
 import com.example.weather.ui.theme.BlueLight
+import com.example.weather.weather.WeatherInfo
+import com.example.weather.weather.getMinMaxTemp
+import com.example.weather.weather.getWeatherInfo
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -42,23 +46,31 @@ import java.util.Locale
 @RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
-fun MainScreen(city: String = "London", context: Context) {
+fun MainScreen(city: String = "London", context: Context = TODO()) {
+
+
     val icon = remember {
         mutableStateOf("Unknown")
     }
-    val temp = remember {
-        mutableStateOf("Unknown")
+    val weatherInfo = remember {
+        mutableStateOf(WeatherInfo())
     }
-    val fellLike = remember {
-        mutableStateOf("Unknown")
-    }
+
     val dateNow = remember {
         mutableStateOf("Unknown")
     }
+
+    getMinMaxTemp(city, weatherInfo, context)
     getIconWeather(city, icon, context)
-    getTemp(city, temp, context)
-    getTempLikeFeels(city, fellLike, context)
-    val currentDate = LocalDate.now() // Текущая дата
+    getWeatherInfo(city, weatherInfo, context)
+
+    Log.i("MyLog", "MainScreen: temp: ${weatherInfo.value.temp}")
+    Log.i("MyLog", "MainScreen: feelLike: ${weatherInfo.value.feelLike}")
+    Log.i("MyLog", "MainScreen: weather: ${weatherInfo.value.weather}")
+    Log.i("MyLog", "MainScreen: Max: ${weatherInfo.value.tempMax}")
+    Log.i("MyLog", "MainScreen: min: ${weatherInfo.value.tempMin}")
+
+    val currentDate = LocalDate.now()
     val formatter = DateTimeFormatter.ofPattern("d MMMM yyyy", Locale.ENGLISH)
 
     dateNow.value = currentDate.format(formatter)
@@ -78,7 +90,8 @@ fun MainScreen(city: String = "London", context: Context) {
         Card(
             colors = CardDefaults.cardColors(
                 containerColor = BlueLight,
-                contentColor = Color.White),
+                contentColor = Color.White
+            ),
             modifier = Modifier
                 .fillMaxWidth(),
             elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
@@ -96,20 +109,59 @@ fun MainScreen(city: String = "London", context: Context) {
                         dateNow.value,
                         modifier = Modifier.padding(top = 9.dp, start = 8.dp),
                         style = TextStyle(fontSize = 15.sp),
-                        )
+                    )
                     AsyncImage(
                         model = "https://openweathermap.org/img/wn/${icon.value}@2x.png",
                         contentDescription = "icon weather",
                         modifier = Modifier
-                            .size(50.dp)
+                            .size(40.dp)
                             .padding(top = 3.dp, end = 8.dp),
-                        )
+                    )
                 }
                 Text(
-                    "${temp.value} C / ${fellLike.value}",
-                    style = TextStyle(fontSize = 30.sp),
+                    city,
+                    style = TextStyle(fontSize = 24.sp),
+                )
+                Text(
+                    "${weatherInfo.value.temp}ºC / ${weatherInfo.value.feelLike}ºC",
+                    style = TextStyle(fontSize = 40.sp),
                     modifier = Modifier.padding(10.dp),
                 )
+                Text(
+                    weatherInfo.value.weather,
+                    style = TextStyle(fontSize = 16.sp),
+                )
+                Text(
+                    "${weatherInfo.value.tempMax}ºC / ${weatherInfo.value.tempMin}ºC",
+                    style = TextStyle(fontSize = 20.sp),
+                )
+                Row (
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ){
+                    IconButton(onClick = {
+
+                    }
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.baseline_search_24),
+                            contentDescription = "Search",
+                            )
+                    }
+                    IconButton(onClick = {
+
+                    }
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.baseline_cloud_sync_24),
+                            contentDescription = "Sync cloud",
+                        )
+                    }
+                }
+                /*Text(
+                    test.value,
+                    style = TextStyle(fontSize = 20.sp),
+                )*/
             }
         }
     }
