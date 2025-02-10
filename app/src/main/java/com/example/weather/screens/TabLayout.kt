@@ -3,7 +3,9 @@ package com.example.weather.screens
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
@@ -26,7 +28,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun TabLayout(){
+fun TabLayout() {
     val tabList = listOf("Hours", "Days")
     val pagerState = rememberPagerState(
         pageCount = { tabList.size }
@@ -55,19 +57,25 @@ fun TabLayout(){
                 Tab(
                     selected = false,
                     onClick = {
-                    coroutineScope.launch {
-                        pagerState.animateScrollToPage(index)
-                    }
-                },
+                        coroutineScope.launch {
+                            pagerState.animateScrollToPage(index)
+                        }
+                    },
                     text = { Text(text = s) },
-                    )
+                )
             }
         }
         HorizontalPager(
             state = pagerState,
             modifier = Modifier.weight(1.0f)
-        ) {
-            Index ->
+        ) { Index ->
+            LazyColumn(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                items(15){
+                    ListItem()
+                }
+            }
         }
     }
 }
