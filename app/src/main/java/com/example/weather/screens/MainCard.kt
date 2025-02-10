@@ -28,7 +28,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -44,10 +43,9 @@ import java.util.Locale
 
 //city: String = "London", context: Context
 @RequiresApi(Build.VERSION_CODES.O)
-@Preview(showBackground = true)
 @Composable
-fun MainScreen(city: String = "London", context: Context = TODO()) {
-
+fun MainCard(city: String = "London", context: Context) {
+    Log.d("MyLog", "MainCard start")
 
     val icon = remember {
         mutableStateOf("Unknown")
@@ -72,19 +70,10 @@ fun MainScreen(city: String = "London", context: Context = TODO()) {
 
     val currentDate = LocalDate.now()
     val formatter = DateTimeFormatter.ofPattern("d MMMM yyyy", Locale.ENGLISH)
-
     dateNow.value = currentDate.format(formatter)
-    Image(
-        painter = painterResource(R.drawable.skybox),
-        contentDescription = "Background blue sky",
-        modifier = Modifier
-            .fillMaxSize()
-            .alpha(0.7f),
-        contentScale = ContentScale.FillBounds,
-    )
+
     Column(
         modifier = Modifier
-            .fillMaxSize()
             .padding(4.dp),
     ) {
         Card(
@@ -158,11 +147,8 @@ fun MainScreen(city: String = "London", context: Context = TODO()) {
                         )
                     }
                 }
-                /*Text(
-                    test.value,
-                    style = TextStyle(fontSize = 20.sp),
-                )*/
             }
         }
     }
+    Log.d("MyLog", "MainCard end")
 }
