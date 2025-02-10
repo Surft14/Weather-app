@@ -9,21 +9,19 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Text
-import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.example.weather.data.WeatherInfo
 import com.example.weather.ui.theme.BlueLight
 
-@Preview(showBackground = true)
 @Composable
-fun ListItem() {
+fun ListItem(item: WeatherInfo) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -41,23 +39,23 @@ fun ListItem() {
                 modifier = Modifier.padding(start = 6.dp, top = 3.dp, bottom = 4.dp)
             ) {
                 Text(
-                    "12:00",
+                    item.time,
                     color = Color.White,
                     style = TextStyle(fontSize = 20.sp)
                 )
                 Text(
-                    "Sunny",
+                    item.weather,
                     color = Color.White,
                     style = TextStyle(fontSize = 20.sp)
                 )
             }
             Text(
-                "25ºC",
+                "${item.temp.ifEmpty {item.tempMax.toString()+"/"+item.tempMin.toString()}}ºC",
                 color = Color.White,
                 style = TextStyle(fontSize = 30.sp)
             )
             AsyncImage(
-                model = "https://openweathermap.org/img/wn/04d@2x.png",
+                model = "https:" + item.icon,
                 contentDescription = "icon weather",
                 modifier = Modifier
                     .size(45.dp)

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
@@ -22,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.weather.data.WeatherInfo
 import com.example.weather.ui.theme.BlueLight
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import kotlinx.coroutines.launch
@@ -72,9 +74,41 @@ fun TabLayout() {
             LazyColumn(
                 modifier = Modifier.fillMaxSize()
             ) {
-                items(15){
-                    ListItem()
+                itemsIndexed(
+                    listOf(
+                        WeatherInfo(
+                            "London",
+                            "10:00",
+                            "14",
+                            "18",
+                            0.0,
+                            0.0,
+                            3.0,
+                            "",
+                            "Sunny",
+                            "//cdn.weatherapi.com/weather/64x64/night/116.png",
+                            -0.18,
+                            7.5,
+                        ),
+                        WeatherInfo(
+                            "Moscow",
+                            "26/02/22",
+                            "",
+                            "",
+                            5.2,
+                            2.6,
+                            3.0,
+                            "dasdsadsa",
+                            "Sunny",
+                            "//cdn.weatherapi.com/weather/64x64/night/116.png",
+                            -0.18,
+                            7.5,
+                        )
+                    )
+                ){
+                    _, item -> ListItem(item)
                 }
+
             }
         }
     }

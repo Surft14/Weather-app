@@ -17,11 +17,6 @@ import com.example.weather.screens.MainCard
 import com.example.weather.screens.TabLayout
 import com.example.weather.ui.theme.WeatherTheme
 
-const val API_KEY = "1a86c614dfa6db6e65f778d79fe2e131"
-const val UNITS = "metric"
-const val LANGUAGE = "ru"
-
-
 
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)

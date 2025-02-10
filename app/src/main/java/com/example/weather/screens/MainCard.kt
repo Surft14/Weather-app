@@ -4,11 +4,9 @@ import android.content.Context
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -23,9 +21,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
@@ -34,7 +30,7 @@ import coil.compose.AsyncImage
 import com.example.weather.R
 import com.example.weather.weather.getIconWeather
 import com.example.weather.ui.theme.BlueLight
-import com.example.weather.weather.WeatherInfo
+import com.example.weather.data.WeatherInfo
 import com.example.weather.weather.getMinMaxTemp
 import com.example.weather.weather.getWeatherInfo
 import java.time.LocalDate
@@ -47,26 +43,26 @@ import java.util.Locale
 fun MainCard(city: String = "London", context: Context) {
     Log.d("MyLog", "MainCard start")
 
-    val icon = remember {
+    /*val icon = remember {
         mutableStateOf("Unknown")
     }
     val weatherInfo = remember {
         mutableStateOf(WeatherInfo())
     }
 
-    val dateNow = remember {
-        mutableStateOf("Unknown")
-    }
-
     getMinMaxTemp(city, weatherInfo, context)
     getIconWeather(city, icon, context)
-    getWeatherInfo(city, weatherInfo, context)
+    getWeatherInfo(city, weatherInfo, context)*/
 
-    Log.i("MyLog", "MainScreen: temp: ${weatherInfo.value.temp}")
+    /*Log.i("MyLog", "MainScreen: temp: ${weatherInfo.value.temp}")
     Log.i("MyLog", "MainScreen: feelLike: ${weatherInfo.value.feelLike}")
     Log.i("MyLog", "MainScreen: weather: ${weatherInfo.value.weather}")
     Log.i("MyLog", "MainScreen: Max: ${weatherInfo.value.tempMax}")
-    Log.i("MyLog", "MainScreen: min: ${weatherInfo.value.tempMin}")
+    Log.i("MyLog", "MainScreen: min: ${weatherInfo.value.tempMin}")*/
+
+    val dateNow = remember {
+        mutableStateOf("Unknown")
+    }
 
     val currentDate = LocalDate.now()
     val formatter = DateTimeFormatter.ofPattern("d MMMM yyyy", Locale.ENGLISH)
@@ -100,7 +96,7 @@ fun MainCard(city: String = "London", context: Context) {
                         style = TextStyle(fontSize = 15.sp),
                     )
                     AsyncImage(
-                        model = "https://openweathermap.org/img/wn/${icon.value}@2x.png",
+                        model = "https://openweathermap.org/img/wn/01d@2x.png",
                         contentDescription = "icon weather",
                         modifier = Modifier
                             .size(40.dp)
@@ -112,16 +108,16 @@ fun MainCard(city: String = "London", context: Context) {
                     style = TextStyle(fontSize = 24.sp),
                 )
                 Text(
-                    "${weatherInfo.value.temp}ºC / ${weatherInfo.value.feelLike}ºC",
+                    "20ºC",
                     style = TextStyle(fontSize = 40.sp),
                     modifier = Modifier.padding(10.dp),
                 )
                 Text(
-                    weatherInfo.value.weather,
+                    "Sunny",
                     style = TextStyle(fontSize = 16.sp),
                 )
                 Text(
-                    "${weatherInfo.value.tempMax}ºC / ${weatherInfo.value.tempMin}ºC",
+                    "21ºC",
                     style = TextStyle(fontSize = 20.sp),
                 )
                 Row (
