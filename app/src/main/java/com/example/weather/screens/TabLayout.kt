@@ -17,6 +17,7 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,7 +31,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun TabLayout() {
+fun TabLayout(daysList: MutableState<List<WeatherInfo>>) {
     val tabList = listOf("Hours", "Days")
     val pagerState = rememberPagerState(
         pageCount = { tabList.size }
@@ -75,36 +76,7 @@ fun TabLayout() {
                 modifier = Modifier.fillMaxSize()
             ) {
                 itemsIndexed(
-                    listOf(
-                        WeatherInfo(
-                            "London",
-                            "10:00",
-                            "14",
-                            "18",
-                            0.0,
-                            0.0,
-                            3.0,
-                            "",
-                            "Sunny",
-                            "//cdn.weatherapi.com/weather/64x64/night/116.png",
-                            -0.18,
-                            7.5,
-                        ),
-                        WeatherInfo(
-                            "Moscow",
-                            "26/02/22",
-                            "",
-                            "",
-                            5.2,
-                            2.6,
-                            3.0,
-                            "dasdsadsa",
-                            "Sunny",
-                            "//cdn.weatherapi.com/weather/64x64/night/116.png",
-                            -0.18,
-                            7.5,
-                        )
-                    )
+                    daysList.value
                 ){
                     _, item -> ListItem(item)
                 }

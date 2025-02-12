@@ -17,6 +17,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -28,10 +29,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.weather.R
-import com.example.weather.weather.getIconWeather
 import com.example.weather.ui.theme.BlueLight
 import com.example.weather.data.WeatherInfo
-import com.example.weather.weather.getMinMaxTemp
 import com.example.weather.weather.getWeatherInfo
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -40,30 +39,13 @@ import java.util.Locale
 //city: String = "London", context: Context
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun MainCard(city: String = "London", context: Context) {
+fun MainCard(day: MutableState<WeatherInfo>) {
     Log.d("MyLog", "MainCard start")
-
-    /*val icon = remember {
-        mutableStateOf("Unknown")
-    }
-    val weatherInfo = remember {
-        mutableStateOf(WeatherInfo())
-    }
-
-    getMinMaxTemp(city, weatherInfo, context)
-    getIconWeather(city, icon, context)
-    getWeatherInfo(city, weatherInfo, context)*/
-
-    /*Log.i("MyLog", "MainScreen: temp: ${weatherInfo.value.temp}")
-    Log.i("MyLog", "MainScreen: feelLike: ${weatherInfo.value.feelLike}")
-    Log.i("MyLog", "MainScreen: weather: ${weatherInfo.value.weather}")
-    Log.i("MyLog", "MainScreen: Max: ${weatherInfo.value.tempMax}")
-    Log.i("MyLog", "MainScreen: min: ${weatherInfo.value.tempMin}")*/
 
     val dateNow = remember {
         mutableStateOf("Unknown")
     }
-
+    
     val currentDate = LocalDate.now()
     val formatter = DateTimeFormatter.ofPattern("d MMMM yyyy", Locale.ENGLISH)
     dateNow.value = currentDate.format(formatter)
@@ -104,7 +86,7 @@ fun MainCard(city: String = "London", context: Context) {
                     )
                 }
                 Text(
-                    city,
+                    day.value.city,
                     style = TextStyle(fontSize = 24.sp),
                 )
                 Text(

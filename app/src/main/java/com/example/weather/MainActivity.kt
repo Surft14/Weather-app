@@ -9,13 +9,18 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import com.example.weather.data.WeatherInfo
 import com.example.weather.screens.MainCard
 import com.example.weather.screens.TabLayout
 import com.example.weather.ui.theme.WeatherTheme
+import com.example.weather.weather.getData
+import com.example.weather.weather.getWeatherInfo
 
 
 class MainActivity : ComponentActivity() {
@@ -24,6 +29,14 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             WeatherTheme {
+                val daysList = remember {
+                    mutableStateOf(listOf<WeatherInfo>())
+                }
+                val day = remember {
+                    mutableStateOf(WeatherInfo())
+                }
+                getData("Cheboksary", this, daysList)
+                getWeatherInfo("Cheboksary", day, this)
                 Image(
                     painter = painterResource(R.drawable.skybox),
                     contentDescription = "Background blue sky",
@@ -33,8 +46,8 @@ class MainActivity : ComponentActivity() {
                     contentScale = ContentScale.FillBounds,
                 )
                 Column {
-                    MainCard("Cheboksary", this@MainActivity)
-                    TabLayout()
+                    MainCard(day)
+                    TabLayout(daysList)
                 }
             }
         }

@@ -12,7 +12,7 @@ import com.example.weather.data.WeatherInfo
 import org.json.JSONObject
 
 fun getWeatherInfo(city: String, state: MutableState<WeatherInfo>, context: Context){
-    val url = "https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=$API_KEY_FW&units=$UNITS&lang=$LANGUAGE"
+    val url = "https://api.weatherapi.com/v1/forecast.json?key=$API_KEY_FW&q=$city&days=2&aqi=no&alerts=no"
     val queue = Volley.newRequestQueue(context)
     val stringRequest = StringRequest(
         com.android.volley.Request.Method.GET,
@@ -21,19 +21,33 @@ fun getWeatherInfo(city: String, state: MutableState<WeatherInfo>, context: Cont
             response ->
             val obj  = JSONObject(response)
             try{
-                state.value.temp = obj.getJSONObject("main").getString("temp")
-                state.value.weather = obj.getJSONArray("weather").getJSONObject(0).getString("main")
-                state.value.feelLike = obj.getJSONObject("main").getString("feels_like")
-                state.value.lat = obj.getJSONObject("coord").getDouble("lat")
-                state.value.lon = obj.getJSONObject("coord").getDouble("lon")
                 Log.d("MyLog", "getWeatherInfo start")
+                state.value.city = city
+                state.value.temp = obj.getJSONObject("current").getString("temp_c")
+                state.value.weather = obj.getJSONObject("current").getJSONObject("condition").getString("text")
+                state.value.feelLike = obj.getString("feelslike_c")
+                state.value.icon = obj.getJSONObject("current").getJSONObject("condition").getString("icon")
+                state.value.tempMax = obj.getJSONObject("forecast")
+                    .getJSONArray("forecastday")
+                    .getJSONObject(2)
+                    .getJSONObject("day")
+                    .getDouble("maxtemp_c")
+                state.value.tempMax = obj.getJSONObject("forecast")
+                    .getJSONArray("forecastday")
+                    .getJSONObject(2)
+                    .getJSONObject("day")
+                    .getDouble("mintemp_c")
+                state.value.wind = obj.getDouble("wind_kph")
+                state.value.windDir = obj.getString("wind_dir")
+
+                Log.i("MyLog", "Icon now: ${state.value.icon}")
                 Log.i("MyLog", "Temp now: ${state.value.temp}")
                 Log.i("MyLog", "Feel like now: ${state.value.feelLike}")
                 Log.i("MyLog", "Weather now: ${state.value.weather}")
-                Log.i("MyLog", "Lat now: ${state.value.lat}")
-                Log.i("MyLog", "Lot now: ${state.value.lon}")
-
-
+                Log.i("MyLog", "Wind now: ${state.value.wind}")
+                Log.i("MyLog", "Max: ${state.value.tempMax}")
+                Log.i("MyLog", "Min: ${state.value.tempMin}")
+                Log.i("MyLog", "Wind dir now: ${state.value.windDir}")
             }
             catch (e: Exception){
                 Log.e("MyLog", "Error: ${e.message}")
