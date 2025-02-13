@@ -14,13 +14,12 @@ fun getWeatherInfoByHours(hours: String): List<WeatherInfo>{
         list.add(
             WeatherInfo(
                 time = item.getString("time"),
-                temp = item.getString("temp_c"),
-                feelLike = item.getString("feelslike_c"),
+                temp = item.getString("temp_c").toFloat().toInt().toString(),
+                feelLike = item.getString("feelslike_c").toFloat().toInt().toString(),
                 weather = item.getJSONObject("condition").getString("text"),
-                wind = item.getString("wind_kph"),
+                wind = item.getString("wind_kph").toFloat().toInt().toString(),
                 windDir = item.getString("wind_dir"),
                 icon = item.getJSONObject("condition").getString("icon"),
-
             )
         )
     }
