@@ -1,9 +1,11 @@
 package com.example.weather.weather
 
+import android.util.Log
 import com.example.weather.data.WeatherInfo
 import org.json.JSONObject
 
 fun getWeatherInfoByDays(response: String): List<WeatherInfo> {
+    Log.d("MyLog", "getWeatherInfoByDays Start")
     if (response.isEmpty()) return listOf()
     val list = ArrayList<WeatherInfo>()
     val mainObj = JSONObject(response)
@@ -14,30 +16,44 @@ fun getWeatherInfoByDays(response: String): List<WeatherInfo> {
     for (i in 0 until days.length()) {
         val item = days[i] as JSONObject
         list.add(
-            WeatherInfo(
-                city,
-                time = item.getString("date"),
-                temp = "",
-                feelLike = "",
-                tempMax = mainObj
-                    .getJSONObject("day")
-                    .getDouble("maxtemp_c"),
-                tempMin = mainObj
-                    .getJSONObject("day")
-                    .getDouble("mintemp_c"),
-                weather = mainObj
-                    .getJSONObject("day")
-                    .getJSONObject("condition")
-                    .getString("text"),
-                wind = 0.0,
-                windDir = "",
-                hours = mainObj.getJSONArray("hour").toString(),
-                icon = mainObj
-                    .getJSONObject("day")
-                    .getJSONObject("condition")
-                    .getString("icon"),
+            try{
+                WeatherInfo(
+                    city,
+                    time = item.getString("date"),
+                    temp = "",
+                    feelLike = "",
+                    tempMax = mainObj
+                        .getJSONObject("forecast")
+                        .getJSONArray("forecastday")
+                        .getJSONObject(0)
+                        .getJSONObject("day")
+                        .getDouble("maxtemp_c"),
+                    tempMin = mainObj
+                        .getJSONObject("forecast")
+                        .getJSONArray("forecastday")
+                        .getJSONObject(0)
+                        .getJSONObject("day")
+                        .getDouble("mintemp_c"),
+                    weather = mainObj
+                        .getJSONObject("current")
+                        .getJSONObject("condition")
+                        .getString("text"),
+                    wind = 0.0,
+                    windDir = "",
+                    hours = mainObj
+                        .getJSONObject("forecast")
+                        .getJSONArray("forecastday")
+                        .getJSONObject(0)
+                        .getJSONArray("hour").toString(),
+                    icon = mainObj
+                        .getJSONObject("current")
+                        .getJSONObject("condition")
+                        .getString("icon"),
 
-            )
+                    )
+            } catch (e: Exception){
+                Log.e("MyLog", " getWeatherInfoByDays Error: $e")
+            } as WeatherInfo
         )
     }
     list[0] = list[0].copy(
@@ -46,14 +62,15 @@ fun getWeatherInfoByDays(response: String): List<WeatherInfo> {
         feelLike = mainObj.getJSONObject("current").getString("feelslike_c"),
         wind = mainObj.getJSONObject("current").getDouble("wind_kph"),
         weather = mainObj
-            .getJSONObject("day")
+            .getJSONObject("current")
             .getJSONObject("condition")
             .getString("text"),
         windDir = mainObj.getJSONObject("current").getString("wind_dir"),
         icon = mainObj
-            .getJSONObject("day")
+            .getJSONObject("current")
             .getJSONObject("condition")
             .getString("icon"),
     )
+    Log.d("MyLog", "getWeatherInfoByDays End")
     return list
 }

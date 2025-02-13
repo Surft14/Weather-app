@@ -9,21 +9,21 @@ import com.example.weather.const.Const.API_KEY_FW
 import com.example.weather.data.WeatherInfo
 import org.json.JSONObject
 
-fun getData(city: String, context: Context, daysList: MutableState<List<WeatherInfo>>){
-    val url = "https://api.weatherapi.com/v1/forecast.json?key=$API_KEY_FW&q=$city&days=3&aqi=no&alerts=no"
+fun getData(city: String, context: Context, daysList: MutableState<List<WeatherInfo>>, day: MutableState<WeatherInfo>){
+    val url = "https://api.weatherapi.com/v1/forecast.json?key=$API_KEY_FW&q=$city&days=2&aqi=no&alerts=no"
     val queue = Volley.newRequestQueue(context)
-    var result = ""
     val stringRequest = StringRequest(
         com.android.volley.Request.Method.GET,
         url,
         {
             response ->
             val list = getWeatherInfoByDays(response)
+            day.value = list[0]
             daysList.value = list
         },
         {
             error ->
-            Log.e("MyLog", "getWeatherInfo error: $error")
+            Log.e("MyLog", "error: $error")
         }
     )
     queue.add(stringRequest)

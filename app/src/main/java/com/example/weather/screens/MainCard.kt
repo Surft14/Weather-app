@@ -72,13 +72,13 @@ fun MainCard(day: MutableState<WeatherInfo>) {
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
-                    Text(
-                        dateNow.value,
+                    Text(// Текст даты
+                        day.value.time,
                         modifier = Modifier.padding(top = 9.dp, start = 8.dp),
                         style = TextStyle(fontSize = 15.sp),
                     )
-                    AsyncImage(
-                        model = "https://openweathermap.org/img/wn/01d@2x.png",
+                    AsyncImage(// Иконка погоды
+                        model = "https:${day.value.icon}",
                         contentDescription = "icon weather",
                         modifier = Modifier
                             .size(40.dp)
@@ -89,24 +89,24 @@ fun MainCard(day: MutableState<WeatherInfo>) {
                     day.value.city,
                     style = TextStyle(fontSize = 24.sp),
                 )
-                Text(
-                    "20ºC",
+                Text(//Нынешняя температура
+                    "${day.value.temp}ºC",
                     style = TextStyle(fontSize = 40.sp),
                     modifier = Modifier.padding(10.dp),
                 )
-                Text(
-                    "Sunny",
+                Text(// Погода
+                    "${day.value.weather}",
                     style = TextStyle(fontSize = 16.sp),
                 )
-                Text(
-                    "21ºC",
+                Text(// Как ощущаеться
+                    "${day.value.feelLike}ºC",
                     style = TextStyle(fontSize = 20.sp),
                 )
-                Row (
+                Row (// Кнопки
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ){
-                    IconButton(onClick = {
+                    IconButton(onClick = { //Кнопка поиска
 
                     }
                     ) {
@@ -115,7 +115,7 @@ fun MainCard(day: MutableState<WeatherInfo>) {
                             contentDescription = "Search",
                             )
                     }
-                    IconButton(onClick = {
+                    IconButton(onClick = {// Кнопка обноления
 
                     }
                     ) {

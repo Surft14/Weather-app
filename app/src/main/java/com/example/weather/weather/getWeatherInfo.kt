@@ -12,7 +12,7 @@ import com.example.weather.data.WeatherInfo
 import org.json.JSONObject
 
 fun getWeatherInfo(city: String, state: MutableState<WeatherInfo>, context: Context){
-    val url = "https://api.weatherapi.com/v1/forecast.json?key=$API_KEY_FW&q=$city&days=2&aqi=no&alerts=no"
+    val url = "https://api.weatherapi.com/v1/forecast.json?key=$API_KEY_FW&q=$city&days=3&aqi=no&alerts=no"
     val queue = Volley.newRequestQueue(context)
     val stringRequest = StringRequest(
         com.android.volley.Request.Method.GET,
@@ -23,9 +23,10 @@ fun getWeatherInfo(city: String, state: MutableState<WeatherInfo>, context: Cont
             try{
                 Log.d("MyLog", "getWeatherInfo start")
                 state.value.city = city
+                state.value.time = obj.getJSONObject("current").getString("last_updated")
                 state.value.temp = obj.getJSONObject("current").getString("temp_c")
                 state.value.weather = obj.getJSONObject("current").getJSONObject("condition").getString("text")
-                state.value.feelLike = obj.getString("feelslike_c")
+                state.value.feelLike = obj.getJSONObject("current").getString("feelslike_c")
                 state.value.icon = obj.getJSONObject("current").getJSONObject("condition").getString("icon")
                 state.value.tempMax = obj.getJSONObject("forecast")
                     .getJSONArray("forecastday")
@@ -50,7 +51,7 @@ fun getWeatherInfo(city: String, state: MutableState<WeatherInfo>, context: Cont
                 Log.i("MyLog", "Wind dir now: ${state.value.windDir}")
             }
             catch (e: Exception){
-                Log.e("MyLog", "Error: ${e.message}")
+                Log.e("MyLog", "getWeatherInfo Error: ${e.message}")
             }
         },
         {

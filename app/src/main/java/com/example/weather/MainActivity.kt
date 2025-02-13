@@ -35,8 +35,7 @@ class MainActivity : ComponentActivity() {
                 val day = remember {
                     mutableStateOf(WeatherInfo())
                 }
-                getData("Cheboksary", this, daysList)
-                getWeatherInfo("Cheboksary", day, this)
+                getData("Cheboksary", this, daysList, day)
                 Image(
                     painter = painterResource(R.drawable.skybox),
                     contentDescription = "Background blue sky",
