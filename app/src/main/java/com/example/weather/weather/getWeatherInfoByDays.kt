@@ -43,7 +43,7 @@ fun getWeatherInfoByDays(response: String): List<WeatherInfo>{
                     hours = mainObj
                         .getJSONObject("forecast")
                         .getJSONArray("forecastday")
-                        .getJSONObject(0)
+                        .getJSONObject(i)
                         .getJSONArray("hour").toString(),
                     icon = mainObj
                         .getJSONObject("current")
@@ -55,6 +55,7 @@ fun getWeatherInfoByDays(response: String): List<WeatherInfo>{
                 Log.e("MyLog", " getWeatherInfoByDays Error: $e")
             } as WeatherInfo
         )
+        Log.i("MyLog", "Hour in getWeatherInfoByDays: ${list[i].hours}")
     }
     list[0] = list[0].copy(
         time = mainObj.getJSONObject("current").getString("last_updated"),

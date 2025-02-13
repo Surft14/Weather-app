@@ -1,5 +1,6 @@
 package com.example.weather.screens
 
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -26,12 +27,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.weather.data.WeatherInfo
 import com.example.weather.ui.theme.BlueLight
+import com.example.weather.weather.getWeatherInfoByDays
+import com.example.weather.weather.getWeatherInfoByHours
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun TabLayout(daysList: MutableState<List<WeatherInfo>>) {
+fun TabLayout(daysList: MutableState<List<WeatherInfo>>, day: MutableState<WeatherInfo>) {// Находиться ниже Main card
     val tabList = listOf("Hours", "Days")
     val pagerState = rememberPagerState(
         pageCount = { tabList.size }
@@ -56,7 +59,7 @@ fun TabLayout(daysList: MutableState<List<WeatherInfo>>) {
             contentColor = Color.White,
             containerColor = BlueLight,
         ) {
-            tabList.forEachIndexed { index, s ->
+            tabList.forEachIndexed { index, str ->
                 Tab(
                     selected = false,
                     onClick = {
@@ -64,7 +67,7 @@ fun TabLayout(daysList: MutableState<List<WeatherInfo>>) {
                             pagerState.animateScrollToPage(index)
                         }
                     },
-                    text = { Text(text = s) },
+                    text = { Text(text = str) },
                 )
             }
         }
@@ -72,16 +75,16 @@ fun TabLayout(daysList: MutableState<List<WeatherInfo>>) {
             state = pagerState,
             modifier = Modifier.weight(1.0f)
         ) { Index ->
-            LazyColumn(
-                modifier = Modifier.fillMaxSize()
-            ) {
-                itemsIndexed(
-                    daysList.value
-                ){
-                    _, item -> ListItem(item)
-                }
-
+            Log.i("MyLog", day.value.hours)
+            val currentList = when(Index){
+                0 -> getWeatherInfoByHours(day.value.hours)
+                1 -> daysList.value
+                else -> daysList.value
             }
+            MainList(// показ погоды по дням и часам
+                list = currentList,
+                day = day,
+            )
         }
     }
 }

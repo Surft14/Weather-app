@@ -10,7 +10,7 @@ import com.example.weather.data.WeatherInfo
 import org.json.JSONObject
 
 fun getData(city: String, context: Context, daysList: MutableState<List<WeatherInfo>>, day: MutableState<WeatherInfo>){
-    val url = "https://api.weatherapi.com/v1/forecast.json?key=$API_KEY_FW&q=$city&days=2&aqi=no&alerts=no"
+    val url = "https://api.weatherapi.com/v1/forecast.json?key=$API_KEY_FW&q=$city&days=7&aqi=no&alerts=no"
     val queue = Volley.newRequestQueue(context)
     val stringRequest = StringRequest(
         com.android.volley.Request.Method.GET,

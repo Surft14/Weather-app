@@ -41,16 +41,6 @@ import java.util.Locale
 @Composable
 fun MainCard(day: MutableState<WeatherInfo>) {
     Log.d("MyLog", "MainCard start")
-
-
-    val dateNow = remember {
-        mutableStateOf("Unknown")
-    }
-    
-    val currentDate = LocalDate.now()
-    val formatter = DateTimeFormatter.ofPattern("d MMMM yyyy", Locale.ENGLISH)
-    dateNow.value = currentDate.format(formatter)
-
     Column(
         modifier = Modifier
             .padding(4.dp),
@@ -58,7 +48,7 @@ fun MainCard(day: MutableState<WeatherInfo>) {
         Card(
             colors = CardDefaults.cardColors(
                 containerColor = BlueLight,
-                contentColor = Color.White
+                contentColor = Color.White,
             ),
             modifier = Modifier
                 .fillMaxWidth(),
@@ -91,7 +81,7 @@ fun MainCard(day: MutableState<WeatherInfo>) {
                     style = TextStyle(fontSize = 24.sp),
                 )
                 Text(//Нынешняя температура и как ощущаеться
-                    "${day.value.temp}ºC/${day.value.feelLike}ºC",
+                    "${day.value.temp.ifEmpty { day.value.tempMax }}ºC/${day.value.feelLike.ifEmpty { day.value.tempMin }}ºC",
                     style = TextStyle(fontSize = 40.sp),
                     modifier = Modifier.padding(10.dp),
                 )
