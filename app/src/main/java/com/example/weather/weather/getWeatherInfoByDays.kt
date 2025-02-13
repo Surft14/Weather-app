@@ -27,18 +27,18 @@ fun getWeatherInfoByDays(response: String): List<WeatherInfo> {
                         .getJSONArray("forecastday")
                         .getJSONObject(0)
                         .getJSONObject("day")
-                        .getDouble("maxtemp_c"),
+                        .getDouble("maxtemp_c").toFloat().toInt().toString(),
                     tempMin = mainObj
                         .getJSONObject("forecast")
                         .getJSONArray("forecastday")
                         .getJSONObject(0)
                         .getJSONObject("day")
-                        .getDouble("mintemp_c"),
+                        .getDouble("mintemp_c").toFloat().toInt().toString(),
                     weather = mainObj
                         .getJSONObject("current")
                         .getJSONObject("condition")
                         .getString("text"),
-                    wind = 0.0,
+                    wind = "",
                     windDir = "",
                     hours = mainObj
                         .getJSONObject("forecast")
@@ -58,9 +58,9 @@ fun getWeatherInfoByDays(response: String): List<WeatherInfo> {
     }
     list[0] = list[0].copy(
         time = mainObj.getJSONObject("current").getString("last_updated"),
-        temp = mainObj.getJSONObject("current").getString("temp_c"),
-        feelLike = mainObj.getJSONObject("current").getString("feelslike_c"),
-        wind = mainObj.getJSONObject("current").getDouble("wind_kph"),
+        temp = mainObj.getJSONObject("current").getString("temp_c").toFloat().toInt().toString(),
+        feelLike = mainObj.getJSONObject("current").getString("feelslike_c").toFloat().toInt().toString(),
+        wind = mainObj.getJSONObject("current").getDouble("wind_kph").toFloat().toInt().toString(),
         weather = mainObj
             .getJSONObject("current")
             .getJSONObject("condition")
