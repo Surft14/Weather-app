@@ -42,6 +42,7 @@ import java.util.Locale
 fun MainCard(day: MutableState<WeatherInfo>) {
     Log.d("MyLog", "MainCard start")
 
+
     val dateNow = remember {
         mutableStateOf("Unknown")
     }
@@ -102,6 +103,51 @@ fun MainCard(day: MutableState<WeatherInfo>) {
                     "${day.value.tempMax}ºC/${day.value.tempMin}ºC",
                     style = TextStyle(fontSize = 20.sp),
                 )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 10.dp),
+                    horizontalArrangement = Arrangement.Center
+                ){
+                    Text(
+                        text = "${day.value.wind} kph",
+                        style = TextStyle(fontSize = 16.sp),
+                        modifier = Modifier.padding(end = 10.dp, top = 5.dp),
+                    )
+                    Column(
+                        modifier = Modifier.padding(start = 10.dp),
+                    ) {
+                        Icon(painter = painterResource(
+                            when(day.value.windDir) {
+                                "N" -> R.drawable.n
+                                "NNE" -> R.drawable.nne
+                                "NE" -> R.drawable.ne
+                                "ENE" -> R.drawable.ene
+                                "E" -> R.drawable.e
+                                "ESE" -> R.drawable.ese
+                                "SE" -> R.drawable.se
+                                "SSE"->R.drawable.sse
+                                "S"->R.drawable.s
+                                "SSW"->R.drawable.ssw
+                                "SW"->R.drawable.sw
+                                "WSW"->R.drawable.wsw
+                                "W"->R.drawable.w
+                                "WNW"->R.drawable.wnw
+                                "NW"->R.drawable.nw
+                                "NNW"->R.drawable.nnw
+                                else->R.drawable.ic_question_mark
+                            }
+                        ),
+                            contentDescription = "Icon wind dir",
+                            modifier = Modifier.size(20.dp),
+                        )
+                        Text(
+                            text = "${day.value.windDir}",
+                            style = TextStyle(fontSize = 11.sp),
+                            modifier = Modifier.padding(bottom = 10.dp),
+                        )
+                    }
+                }
                 Row (// Кнопки
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
@@ -110,16 +156,17 @@ fun MainCard(day: MutableState<WeatherInfo>) {
 
                     }
                     ) {
-                        Icon(
+                        Icon(// Иконка поиска
                             painter = painterResource(R.drawable.baseline_search_24),
                             contentDescription = "Search",
                             )
                     }
+
                     IconButton(onClick = {// Кнопка обноления
 
                     }
                     ) {
-                        Icon(
+                        Icon(// Иконка синхронизации
                             painter = painterResource(R.drawable.baseline_cloud_sync_24),
                             contentDescription = "Sync cloud",
                         )

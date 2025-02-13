@@ -4,7 +4,7 @@ import android.util.Log
 import com.example.weather.data.WeatherInfo
 import org.json.JSONObject
 
-fun getWeatherInfoByDays(response: String): List<WeatherInfo> {
+fun getWeatherInfoByDays(response: String): List<WeatherInfo>{
     Log.d("MyLog", "getWeatherInfoByDays Start")
     if (response.isEmpty()) return listOf()
     val list = ArrayList<WeatherInfo>()
@@ -13,7 +13,7 @@ fun getWeatherInfoByDays(response: String): List<WeatherInfo> {
     val days = mainObj
         .getJSONObject("forecast")
         .getJSONArray("forecastday")
-    for (i in 0 until days.length()) {
+    for (i in 0 until days.length()){
         val item = days[i] as JSONObject
         list.add(
             try{
