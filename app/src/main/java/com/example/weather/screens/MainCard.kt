@@ -89,8 +89,8 @@ fun MainCard(day: MutableState<WeatherInfo>) {
                     day.value.city,
                     style = TextStyle(fontSize = 24.sp),
                 )
-                Text(//Нынешняя температура
-                    "${day.value.temp}ºC",
+                Text(//Нынешняя температура и как ощущаеться
+                    "${day.value.temp}ºC/${day.value.feelLike}ºC",
                     style = TextStyle(fontSize = 40.sp),
                     modifier = Modifier.padding(10.dp),
                 )
@@ -98,8 +98,8 @@ fun MainCard(day: MutableState<WeatherInfo>) {
                     "${day.value.weather}",
                     style = TextStyle(fontSize = 16.sp),
                 )
-                Text(// Как ощущаеться
-                    "${day.value.feelLike}ºC",
+                Text(// Теипература макс и мин
+                    "${day.value.tempMax}ºC/${day.value.tempMin}ºC",
                     style = TextStyle(fontSize = 20.sp),
                 )
                 Row (// Кнопки
