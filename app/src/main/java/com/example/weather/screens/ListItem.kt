@@ -49,11 +49,19 @@ fun ListItem(item: WeatherInfo, day: MutableState<WeatherInfo>) {
                     color = Color.White,
                     style = TextStyle(fontSize = 20.sp)
                 )
-                Text(
-                    item.weather,
-                    color = Color.White,
-                    style = TextStyle(fontSize = 20.sp)
-                )
+                Row(){
+                    Text(
+                        item.weather,
+                        color = Color.White,
+                        style = TextStyle(fontSize = 20.sp)
+                    )
+                    Text(
+                        item.wind + " kph",
+                        color = Color.White,
+                        style = TextStyle(fontSize = 20.sp),
+                        modifier = Modifier.padding(start = 9.dp),
+                    )
+                }
             }
             Text(
                 "${item.temp.ifEmpty{item.tempMax+"/"+item.tempMin}}ºC",
