@@ -18,6 +18,7 @@ import androidx.compose.ui.res.painterResource
 import com.example.weather.data.WeatherInfo
 import com.example.weather.screens.MainCard
 import com.example.weather.screens.TabLayout
+import com.example.weather.screens.dialogSearch
 import com.example.weather.ui.theme.WeatherTheme
 import com.example.weather.weather.getData
 import com.example.weather.weather.getWeatherInfo
@@ -35,6 +36,14 @@ class MainActivity : ComponentActivity() {
                 val day = remember {
                     mutableStateOf(WeatherInfo())
                 }
+                val dialogState = remember {
+                    mutableStateOf(false)
+                }
+                if (dialogState.value){
+                    dialogSearch(dialogState, onSubmit = { city ->
+                        getData(city, this, daysList, day)
+                    })
+                }
                 getData("Cheboksary", this, daysList, day)
                 Image(
                     painter = painterResource(R.drawable.skybox),
@@ -45,7 +54,15 @@ class MainActivity : ComponentActivity() {
                     contentScale = ContentScale.FillBounds,
                 )
                 Column {
-                    MainCard(day)
+                    MainCard(
+                        day,
+                        onClickSync = {
+                            getData("Cheboksary", this@MainActivity, daysList, day)
+                        },
+                        onClickSearch = {
+                            dialogState.value = true
+                        }
+                    )
                     TabLayout(daysList, day)
                 }
             }

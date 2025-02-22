@@ -31,6 +31,7 @@ import coil.compose.AsyncImage
 import com.example.weather.R
 import com.example.weather.ui.theme.BlueLight
 import com.example.weather.data.WeatherInfo
+import com.example.weather.weather.getData
 import com.example.weather.weather.getWeatherInfo
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -39,7 +40,7 @@ import java.util.Locale
 //city: String = "London", context: Context
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun MainCard(day: MutableState<WeatherInfo>) {
+fun MainCard(day: MutableState<WeatherInfo>, onClickSync: () -> Unit, onClickSearch: () -> Unit) {
     Log.d("MyLog", "MainCard start")
     Column(
         modifier = Modifier
@@ -143,7 +144,7 @@ fun MainCard(day: MutableState<WeatherInfo>) {
                     horizontalArrangement = Arrangement.SpaceBetween
                 ){
                     IconButton(onClick = { //Кнопка поиска
-
+                        onClickSearch.invoke()
                     }
                     ) {
                         Icon(// Иконка поиска
@@ -153,7 +154,7 @@ fun MainCard(day: MutableState<WeatherInfo>) {
                     }
 
                     IconButton(onClick = {// Кнопка обноления
-
+                        onClickSync.invoke() // Вызывает переданную функцию
                     }
                     ) {
                         Icon(// Иконка синхронизации
