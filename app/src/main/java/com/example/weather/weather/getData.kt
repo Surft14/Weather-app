@@ -23,7 +23,7 @@ fun getData(city: String, context: Context, daysList: MutableState<List<WeatherI
         },
         {
             error ->
-            Log.e("MyLog", "error: $error")
+            Log.e("MyLog", "Get data error: $error")
         }
     )
     queue.add(stringRequest)

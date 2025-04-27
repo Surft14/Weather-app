@@ -1,5 +1,8 @@
 package com.example.weather
 
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -9,17 +12,24 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.core.content.ContextCompat
+import com.example.weather.data.Coordinate
 import com.example.weather.data.WeatherInfo
+import com.example.weather.logic.GeolocationLogic
+import com.example.weather.logic.GeolocationLogic.getCityFromCoordinate
 import com.example.weather.screens.MainCard
 import com.example.weather.screens.TabLayout
 import com.example.weather.screens.dialogSearch
 import com.example.weather.ui.theme.WeatherTheme
+import com.example.weather.utils.GeolocationUtils
 import com.example.weather.weather.getData
 import com.example.weather.weather.getWeatherInfo
 
@@ -28,8 +38,19 @@ class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             WeatherTheme {
+                GeolocationUtils.GetGeolocationPermission()
+                val city = remember { mutableStateOf("Tokyo") }
+
+                if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                    && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+                    LaunchedEffect(Unit) {
+                        city.value = getCityFromCoordinate(this@MainActivity) ?: "Moscow"
+                    }
+                }
+
                 val daysList = remember {
                     mutableStateOf(listOf<WeatherInfo>())
                 }
@@ -39,12 +60,13 @@ class MainActivity : ComponentActivity() {
                 val dialogState = remember {
                     mutableStateOf(false)
                 }
-                if (dialogState.value){
+                if (dialogState.value) {
                     dialogSearch(dialogState, onSubmit = { city ->
                         getData(city, this, daysList, day)
                     })
                 }
-                getData("Cheboksary", this, daysList, day)
+
+                getData(city.value, this, daysList, day)
                 Image(
                     painter = painterResource(R.drawable.skybox),
                     contentDescription = "Background blue sky",
@@ -57,7 +79,7 @@ class MainActivity : ComponentActivity() {
                     MainCard(
                         day,
                         onClickSync = {
-                            getData("Cheboksary", this@MainActivity, daysList, day)
+                            getData(city.value, this@MainActivity, daysList, day)
                         },
                         onClickSearch = {
                             dialogState.value = true
