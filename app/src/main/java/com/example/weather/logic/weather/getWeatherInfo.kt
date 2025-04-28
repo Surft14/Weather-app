@@ -6,9 +6,7 @@ import androidx.compose.runtime.MutableState
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
-import com.example.weather.const.Const.API_KEY_FW
-import com.example.weather.const.Const.LANGUAGE
-import com.example.weather.const.Const.UNITS
+import com.example.weather.data.const.Const.API_KEY_FW
 import com.example.weather.data.WeatherInfo
 import org.json.JSONObject
 

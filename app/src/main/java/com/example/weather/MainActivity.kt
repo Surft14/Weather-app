@@ -19,6 +19,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.core.content.ContextCompat
 import com.example.weather.data.WeatherInfo
+import com.example.weather.data.weather.readWeatherData
 import com.example.weather.logic.GeolocationLogic.getCityFromCoordinate
 import com.example.weather.screens.MainCard
 import com.example.weather.screens.TabLayout
@@ -26,6 +27,7 @@ import com.example.weather.screens.DialogSearch
 import com.example.weather.ui.theme.WeatherTheme
 import com.example.weather.utils.GeolocationUtils
 import com.example.weather.logic.weather.getData
+import com.example.weather.utils.isNetWorkAvailable
 
 
 class MainActivity : ComponentActivity() {
@@ -66,7 +68,16 @@ class MainActivity : ComponentActivity() {
                         getData(city, this, daysList, day)
                     })
                 }
-
+                if (!isNetWorkAvailable(context = this)){
+                    LaunchedEffect(Unit){
+                        readWeatherData(
+                            context = this@MainActivity,
+                            city = city,
+                            day = day,
+                            dayList = daysList
+                        )
+                    }
+                }
                 getData(city.value, this, daysList, day)
                 Image(
                     painter = painterResource(R.drawable.skybox),

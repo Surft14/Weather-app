@@ -14,6 +14,9 @@ coilVersion = "2.0.0-rc01"
 accompanistVersion = "0.32.0"
 locVer = "21.0.1"
 locV = "4.3.15"
+dataPrefVer = "1.1.0"
+dataVer="1.1.5"
+
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -36,6 +39,9 @@ coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilVersion"
 accompanist-pager = { module = "com.google.accompanist:accompanist-pager", version.ref = "accompanistVersion" }
 accompanist-pager-indicators = { module = "com.google.accompanist:accompanist-pager-indicators", version.ref = "accompanistVersion" }
 gms-location = {group ="com.google.android.gms", name ="play-services-location", version.ref ="locVer"}
+datastore-preferences = {group="androidx.datastore", name="datastore-preferences", version.ref= "dataPrefVer" }
+datastore = {group="androidx.datastore", name="datastore", version.ref="dataVer"}
+datastore-core = {group="androidx.datastore", name="datastore-core", version.ref="dataVer"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

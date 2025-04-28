@@ -77,7 +77,7 @@ fun MainCard(day: MutableState<WeatherInfo>, onClickSync: () -> Unit, onClickSea
                 )
                 Text(
 //Нынешняя температура и как ощущаеться
-                    "${day.value.temp.ifEmpty { day.value.tempMax }}ºC/${day.value.feelLike.ifEmpty { day.value.tempMin }}ºC",
+                    "${day.value.temp.ifEmpty { day.value.tempMax }}ºC/feel ${day.value.feelLike.ifEmpty { day.value.tempMin }}ºC",
                     style = TextStyle(fontSize = 40.sp),
                     modifier = Modifier.padding(10.dp),
                 )
@@ -88,7 +88,7 @@ fun MainCard(day: MutableState<WeatherInfo>, onClickSync: () -> Unit, onClickSea
                 )
                 Text(
 // Теипература макс и мин
-                    "${day.value.tempMax}ºC/${day.value.tempMin}ºC",
+                    "max ${day.value.tempMax}ºC/ min ${day.value.tempMin}ºC",
                     style = TextStyle(fontSize = 20.sp),
                 )
                 Row(
