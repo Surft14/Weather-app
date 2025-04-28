@@ -14,9 +14,10 @@ import kotlin.coroutines.resume
 
 object GeolocationLogic {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+
     @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
     private suspend fun Context.getCoordinate(context: Context): Coordinate? =
-        suspendCancellableCoroutine { cont->
+        suspendCancellableCoroutine { cont ->
             Log.d("MyLog", "getCoordinate")
             fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
             fusedLocationClient.lastLocation
@@ -26,10 +27,12 @@ object GeolocationLogic {
                             "MyLog",
                             "getCoordinate Success: ${location.latitude} : ${location.longitude}"
                         )
-                        cont.resume(Coordinate(
-                            latitude = location.latitude,
-                            longitude = location.longitude
-                        ))
+                        cont.resume(
+                            Coordinate(
+                                latitude = location.latitude,
+                                longitude = location.longitude
+                            )
+                        )
                     } else {
                         Log.e("MyLog", "getCoordinate failed")
                     }
@@ -40,13 +43,13 @@ object GeolocationLogic {
         }
 
     @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
-    suspend fun Context.getCityFromCoordinate(context: Context): String?{
+    suspend fun Context.getCityFromCoordinate(context: Context): String? {
         Log.d("MyLog", "getCityFromCoordinate")
         val coordinate = getCoordinate(context)
-        if (coordinate?.longitude == null || coordinate.latitude == null){
+        if (coordinate?.longitude == null || coordinate.latitude == null) {
             Log.e("MyLog", "Not received coordinate")
             return null
-        }else{
+        } else {
             val geocoder = Geocoder(context, java.util.Locale.ENGLISH)
             val address = geocoder.getFromLocation(coordinate.latitude, coordinate.longitude, 1)
             Log.d("MyLog", "Locale city: ${address?.get(0)?.locality}")

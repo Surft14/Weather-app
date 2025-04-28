@@ -13,7 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 
 @Composable
-fun dialogSearch(dialogState: MutableState<Boolean>, onSubmit: (String) -> Unit){
+fun DialogSearch(dialogState: MutableState<Boolean>, onSubmit: (String) -> Unit) {
     val dialogText = remember {
         mutableStateOf("")
     }

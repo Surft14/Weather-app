@@ -1,7 +1,6 @@
 package com.example.weather
 
 import android.Manifest
-import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -11,27 +10,22 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.core.content.ContextCompat
-import com.example.weather.data.Coordinate
 import com.example.weather.data.WeatherInfo
-import com.example.weather.logic.GeolocationLogic
 import com.example.weather.logic.GeolocationLogic.getCityFromCoordinate
 import com.example.weather.screens.MainCard
 import com.example.weather.screens.TabLayout
-import com.example.weather.screens.dialogSearch
+import com.example.weather.screens.DialogSearch
 import com.example.weather.ui.theme.WeatherTheme
 import com.example.weather.utils.GeolocationUtils
-import com.example.weather.weather.getData
-import com.example.weather.weather.getWeatherInfo
+import com.example.weather.logic.weather.getData
 
 
 class MainActivity : ComponentActivity() {
@@ -44,8 +38,15 @@ class MainActivity : ComponentActivity() {
                 GeolocationUtils.GetGeolocationPermission()
                 val city = remember { mutableStateOf("Tokyo") }
 
-                if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                    && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+                if (ContextCompat.checkSelfPermission(
+                        this,
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                    ) == PackageManager.PERMISSION_GRANTED
+                    && ContextCompat.checkSelfPermission(
+                        this,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                    ) == PackageManager.PERMISSION_GRANTED
+                ) {
                     LaunchedEffect(Unit) {
                         city.value = getCityFromCoordinate(this@MainActivity) ?: "Moscow"
                     }
@@ -61,7 +62,7 @@ class MainActivity : ComponentActivity() {
                     mutableStateOf(false)
                 }
                 if (dialogState.value) {
-                    dialogSearch(dialogState, onSubmit = { city ->
+                    DialogSearch(dialogState, onSubmit = { city ->
                         getData(city, this, daysList, day)
                     })
                 }

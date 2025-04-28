@@ -1,4 +1,4 @@
-package com.example.weather.weather
+package com.example.weather.logic.weather
 
 import com.example.weather.data.WeatherInfo
 import org.json.JSONArray
