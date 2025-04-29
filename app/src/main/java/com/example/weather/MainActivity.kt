@@ -19,11 +19,12 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.core.content.ContextCompat
 import com.example.weather.data.WeatherInfo
+import com.example.weather.data.weather.readUserCity
 import com.example.weather.data.weather.readWeatherData
 import com.example.weather.logic.GeolocationLogic.getCityFromCoordinate
-import com.example.weather.screens.MainCard
-import com.example.weather.screens.TabLayout
-import com.example.weather.screens.DialogSearch
+import com.example.weather.ui.screens.MainCard
+import com.example.weather.ui.screens.TabLayout
+import com.example.weather.ui.screens.DialogSearch
 import com.example.weather.ui.theme.WeatherTheme
 import com.example.weather.utils.GeolocationUtils
 import com.example.weather.logic.weather.getData
@@ -38,27 +39,37 @@ class MainActivity : ComponentActivity() {
         setContent {
             WeatherTheme {
                 GeolocationUtils.GetGeolocationPermission()
-                val city = remember { mutableStateOf("Tokyo") }
-
-                if (ContextCompat.checkSelfPermission(
-                        this,
-                        Manifest.permission.ACCESS_FINE_LOCATION
-                    ) == PackageManager.PERMISSION_GRANTED
-                    && ContextCompat.checkSelfPermission(
-                        this,
-                        Manifest.permission.ACCESS_COARSE_LOCATION
-                    ) == PackageManager.PERMISSION_GRANTED
-                ) {
-                    LaunchedEffect(Unit) {
-                        city.value = getCityFromCoordinate(this@MainActivity) ?: "Moscow"
-                    }
-                }
-
+                val city = remember { mutableStateOf("") }
                 val daysList = remember {
                     mutableStateOf(listOf<WeatherInfo>())
                 }
                 val day = remember {
                     mutableStateOf(WeatherInfo())
+                }
+
+                LaunchedEffect(Unit) {
+                    readUserCity(this@MainActivity, city)
+                    if (city.value.isBlank()){
+                        if (ContextCompat.checkSelfPermission(
+                                this@MainActivity,
+                                Manifest.permission.ACCESS_FINE_LOCATION
+                            ) == PackageManager.PERMISSION_GRANTED
+                            && ContextCompat.checkSelfPermission(
+                                this@MainActivity,
+                                Manifest.permission.ACCESS_COARSE_LOCATION
+                            ) == PackageManager.PERMISSION_GRANTED
+                        ) {
+                            city.value = getCityFromCoordinate(this@MainActivity) ?: "Moscow"
+                        }
+                    }
+                }
+
+                LaunchedEffect(city.value) {
+                    if (city.value.isNotBlank() && isNetWorkAvailable(this@MainActivity)){
+                        getData(city.value, this@MainActivity, daysList, day)
+                    } else if(city.value.isNotBlank()){
+                        readWeatherData(this@MainActivity, day, daysList)
+                    }
                 }
                 val dialogState = remember {
                     mutableStateOf(false)
@@ -68,17 +79,8 @@ class MainActivity : ComponentActivity() {
                         getData(city, this, daysList, day)
                     })
                 }
-                if (!isNetWorkAvailable(context = this)){
-                    LaunchedEffect(Unit){
-                        readWeatherData(
-                            context = this@MainActivity,
-                            city = city,
-                            day = day,
-                            dayList = daysList
-                        )
-                    }
-                }
-                getData(city.value, this, daysList, day)
+
+
                 Image(
                     painter = painterResource(R.drawable.skybox),
                     contentDescription = "Background blue sky",

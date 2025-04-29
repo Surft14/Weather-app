@@ -1,4 +1,4 @@
-package com.example.weather.screens
+package com.example.weather.ui.screens
 
 import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
