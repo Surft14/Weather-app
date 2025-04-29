@@ -12,4 +12,5 @@ data class WeatherInfo(
     var windDir: String = "",
     var hours: String = "",
     var icon: String = "",
+    var code: Int = 0
 )

@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.rememberCoroutineScope
+import com.android.volley.DefaultRetryPolicy
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
@@ -42,6 +43,11 @@ fun getData(
         }
     ).apply {
         setShouldCache(false)
+        retryPolicy = DefaultRetryPolicy(
+            5_000, // таймаут: 5 секунд
+            3,      // максимальное количество повторов
+            1.0f,   // множитель увеличения задержки (1.0 = линейно)
+        )
     }
     queue.add(stringRequest)
 }

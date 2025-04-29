@@ -19,6 +19,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.core.content.ContextCompat
 import com.example.weather.data.WeatherInfo
+import com.example.weather.data.const.WeatherCodes
 import com.example.weather.data.weather.readUserCity
 import com.example.weather.data.weather.readWeatherData
 import com.example.weather.logic.GeolocationLogic.getCityFromCoordinate
@@ -28,6 +29,7 @@ import com.example.weather.ui.screens.DialogSearch
 import com.example.weather.ui.theme.WeatherTheme
 import com.example.weather.utils.GeolocationUtils
 import com.example.weather.logic.weather.getData
+import com.example.weather.logic.weather.getWeatherCondition
 import com.example.weather.utils.isNetWorkAvailable
 
 
@@ -46,7 +48,7 @@ class MainActivity : ComponentActivity() {
                 val day = remember {
                     mutableStateOf(WeatherInfo())
                 }
-
+                val imageSkyBox = remember { mutableStateOf(R.drawable.skybox) }
                 LaunchedEffect(Unit) {
                     readUserCity(this@MainActivity, city)
                     if (city.value.isBlank()){
@@ -67,8 +69,10 @@ class MainActivity : ComponentActivity() {
                 LaunchedEffect(city.value) {
                     if (city.value.isNotBlank() && isNetWorkAvailable(this@MainActivity)){
                         getData(city.value, this@MainActivity, daysList, day)
+                        imageSkyBox.value = getWeatherCondition(day.value)
                     } else if(city.value.isNotBlank()){
                         readWeatherData(this@MainActivity, day, daysList)
+                        imageSkyBox.value = getWeatherCondition(day.value)
                     }
                 }
                 val dialogState = remember {
@@ -81,8 +85,9 @@ class MainActivity : ComponentActivity() {
                 }
 
 
+                imageSkyBox.value = getWeatherCondition(day.value)
                 Image(
-                    painter = painterResource(R.drawable.skybox),
+                    painter = painterResource(imageSkyBox.value),
                     contentDescription = "Background blue sky",
                     modifier = Modifier
                         .fillMaxSize()

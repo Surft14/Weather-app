@@ -49,7 +49,13 @@ fun getWeatherInfoByDays(response: String): List<WeatherInfo>{
                         .getJSONObject("current")
                         .getJSONObject("condition")
                         .getString("icon"),
+                    code = mainObj
+                        .getJSONObject("current")
+                        .getJSONObject("condition")
+                        .getInt("code"),
                     )
+
+
             } catch (e: Exception){
                 Log.e("MyLog", " getWeatherInfoByDays Error: $e")
             } as WeatherInfo
