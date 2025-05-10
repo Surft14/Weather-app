@@ -56,14 +56,12 @@ fun ListItem(item: WeatherInfo, day: MutableState<WeatherInfo>) {
                         style = TextStyle(fontSize = 20.sp)
                     )
                     Text(
-                        text = "${
-                            if (item.wind.isEmpty()){
-                                ""
-                            }
-                            else{
-                                item.wind + " kph"
-                            }
-                        }",
+                        text = if (item.wind.isEmpty()){
+                            ""
+                        }
+                        else{
+                            item.wind + " kph"
+                        },
                         color = Color.White,
                         style = TextStyle(fontSize = 20.sp),
                         modifier = Modifier.padding(start = 9.dp),

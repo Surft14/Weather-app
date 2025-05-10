@@ -11,6 +11,7 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.weather.data.const.Const.API_KEY_FW
 import com.example.weather.data.WeatherInfo
+import com.example.weather.data.weather.saveCity
 import com.example.weather.data.weather.saveWeatherData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -24,7 +25,7 @@ fun getData(
     day: MutableState<WeatherInfo>,
 ) {
     val url =
-        "https://api.weatherapi.com/v1/forecast.json?key=$API_KEY_FW&q=$city&days=7&aqi=no&alerts=no"
+        "https://api.weatherapi.com/v1/forecast.json?key=$API_KEY_FW&q=$city&days=3&aqi=no&alerts=no"
     val queue = Volley.newRequestQueue(context)
     val ioScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     val stringRequest = StringRequest(
@@ -35,7 +36,7 @@ fun getData(
             day.value = list[0]
             daysList.value = list
             ioScope.launch {
-                saveWeatherData(city, response, context)
+                saveWeatherData(response, context)
             }
         },
         { error ->

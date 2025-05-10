@@ -6,6 +6,7 @@ import android.location.Geocoder
 import android.util.Log
 import androidx.annotation.RequiresPermission
 import com.example.weather.data.Coordinate
+import com.example.weather.data.weather.saveCity
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -53,6 +54,7 @@ object GeolocationLogic {
             val geocoder = Geocoder(context, java.util.Locale.ENGLISH)
             val address = geocoder.getFromLocation(coordinate.latitude, coordinate.longitude, 1)
             Log.d("MyLog", "Locale city: ${address?.get(0)?.locality}")
+            saveCity(address?.firstOrNull()?.locality.toString(), context)
             return address?.firstOrNull()?.locality
         }
 

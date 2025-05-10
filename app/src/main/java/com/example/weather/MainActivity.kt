@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
@@ -51,7 +52,9 @@ class MainActivity : ComponentActivity() {
                 val imageSkyBox = remember { mutableStateOf(R.drawable.skybox) }
                 LaunchedEffect(Unit) {
                     readUserCity(this@MainActivity, city)
+                    Log.d("MyLog", "City location from dataStore: ${city.value}")
                     if (city.value.isBlank()){
+                        Log.i("MyLog", "City is blank")
                         if (ContextCompat.checkSelfPermission(
                                 this@MainActivity,
                                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -61,19 +64,20 @@ class MainActivity : ComponentActivity() {
                                 Manifest.permission.ACCESS_COARSE_LOCATION
                             ) == PackageManager.PERMISSION_GRANTED
                         ) {
+                            Log.i("MyLog", "get city from geolocation")
                             city.value = getCityFromCoordinate(this@MainActivity) ?: "Moscow"
                         }
                     }
                 }
 
                 LaunchedEffect(city.value) {
-                    if (city.value.isNotBlank() && isNetWorkAvailable(this@MainActivity)){
+                    Log.i("MyLog", "read data from cache")
+                    readWeatherData(this@MainActivity, day, daysList)
+                    if (day.value.equals(WeatherInfo()) && daysList.value.isEmpty() && isNetWorkAvailable(this@MainActivity)){
+                        Log.i("MyLog", "cache is blank")
                         getData(city.value, this@MainActivity, daysList, day)
-                        imageSkyBox.value = getWeatherCondition(day.value)
-                    } else if(city.value.isNotBlank()){
-                        readWeatherData(this@MainActivity, day, daysList)
-                        imageSkyBox.value = getWeatherCondition(day.value)
                     }
+                    imageSkyBox.value = getWeatherCondition(day.value)
                 }
                 val dialogState = remember {
                     mutableStateOf(false)

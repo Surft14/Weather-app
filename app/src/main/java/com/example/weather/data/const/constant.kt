@@ -1,5 +1,6 @@
 package com.example.weather.data.const
 
+import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 
 object Const{
@@ -7,11 +8,13 @@ object Const{
     const val API_KEY_OWM = "1a86c614dfa6db6e65f778d79fe2e131"//https://openweathermap.org/
     const val UNITS = "metric"
     const val LANGUAGE = "ru"
+    const val WEATHER_TTL_MS = 60 * 60 * 1_000L // один час
 }
 
 object PreferencesKey{
     val WEATHER_DATA_KEY = stringPreferencesKey("weatherData")
     val USER_CITY_KEY = stringPreferencesKey("userCity")
+    val TIME_MS_KEY = longPreferencesKey("timeMsKey")
 }
 
 object WeatherCodes {

@@ -18,6 +18,5 @@ fun MainList(list: List<WeatherInfo>, day: MutableState<WeatherInfo>) {
         ) { _, item ->
             ListItem(item, day)
         }
-
     }
 }
