@@ -1,7 +1,7 @@
 package com.example.weather.logic.weather
 
 import com.example.weather.R
-import com.example.weather.data.WeatherInfo
+import com.example.weather.data.model.WeatherInfo
 import com.example.weather.data.const.WeatherCodes
 
 fun getWeatherCondition(day: WeatherInfo): Int {

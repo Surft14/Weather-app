@@ -19,7 +19,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.example.weather.data.WeatherInfo
+import com.example.weather.data.model.WeatherInfo
 import com.example.weather.ui.theme.BlueLight
 
 @Composable

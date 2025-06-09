@@ -19,7 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.weather.data.WeatherInfo
+import com.example.weather.data.model.WeatherInfo
 import com.example.weather.ui.theme.BlueLight
 import com.example.weather.logic.weather.getWeatherInfoByHours
 import kotlinx.coroutines.launch

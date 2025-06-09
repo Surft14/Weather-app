@@ -1,6 +1,6 @@
 package com.example.weather.logic.weather
 
-import com.example.weather.data.WeatherInfo
+import com.example.weather.data.model.WeatherInfo
 import org.json.JSONArray
 import org.json.JSONObject
 import org.json.JSONTokener

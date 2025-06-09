@@ -6,7 +6,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
-import com.example.weather.data.WeatherInfo
+import com.example.weather.data.model.WeatherInfo
 
 @Composable
 fun MainList(list: List<WeatherInfo>, day: MutableState<WeatherInfo>) {

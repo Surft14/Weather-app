@@ -3,7 +3,7 @@ package com.example.weather.data.weather
 import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.MutableState
-import com.example.weather.data.WeatherInfo
+import com.example.weather.data.model.WeatherInfo
 import com.example.weather.data.const.Const.WEATHER_TTL_MS
 import com.example.weather.data.const.PreferencesKey
 import com.example.weather.data.dataStore

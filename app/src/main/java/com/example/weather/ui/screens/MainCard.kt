@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.weather.R
 import com.example.weather.ui.theme.BlueLight
-import com.example.weather.data.WeatherInfo
+import com.example.weather.data.model.WeatherInfo
 
 //city: String = "London", context: Context
 @RequiresApi(Build.VERSION_CODES.O)

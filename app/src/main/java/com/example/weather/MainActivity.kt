@@ -19,7 +19,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.core.content.ContextCompat
-import com.example.weather.data.WeatherInfo
+import com.example.weather.data.model.WeatherInfo
 import com.example.weather.data.const.WeatherCodes
 import com.example.weather.data.weather.readUserCity
 import com.example.weather.data.weather.readWeatherData

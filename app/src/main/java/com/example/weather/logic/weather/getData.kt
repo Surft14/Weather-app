@@ -10,7 +10,7 @@ import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.weather.data.const.Const.API_KEY_FW
-import com.example.weather.data.WeatherInfo
+import com.example.weather.data.model.WeatherInfo
 import com.example.weather.data.weather.saveCity
 import com.example.weather.data.weather.saveWeatherData
 import kotlinx.coroutines.CoroutineScope

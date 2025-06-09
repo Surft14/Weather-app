@@ -1,7 +1,7 @@
 package com.example.weather.logic.weather
 
 import android.util.Log
-import com.example.weather.data.WeatherInfo
+import com.example.weather.data.model.WeatherInfo
 import org.json.JSONObject
 
 fun getWeatherInfoByDays(response: String): List<WeatherInfo>{
