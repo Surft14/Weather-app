@@ -1,4 +1,4 @@
-package com.example.weather.data
+package com.example.weather.data.model
 
 data class Coordinate(
     val latitude: Double? = null,

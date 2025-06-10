@@ -2,17 +2,15 @@ package com.example.weather.logic.weather
 
 import android.content.Context
 import android.util.Log
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.rememberCoroutineScope
 import com.android.volley.DefaultRetryPolicy
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.weather.data.const.Const.API_KEY_FW
 import com.example.weather.data.model.WeatherInfo
-import com.example.weather.data.weather.saveCity
-import com.example.weather.data.weather.saveWeatherData
+import com.example.weather.logic.weather_cache.impl.WeatherCacheImpl
+import com.example.weather.logic.weather_cache.interfaces.WeatherCache
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -24,6 +22,7 @@ fun getData(
     daysList: MutableState<List<WeatherInfo>>,
     day: MutableState<WeatherInfo>,
 ) {
+    val weatherCache: WeatherCache = WeatherCacheImpl()
     val url =
         "https://api.weatherapi.com/v1/forecast.json?key=$API_KEY_FW&q=$city&days=3&aqi=no&alerts=no"
     val queue = Volley.newRequestQueue(context)
@@ -36,7 +35,7 @@ fun getData(
             day.value = list[0]
             daysList.value = list
             ioScope.launch {
-                saveWeatherData(response, context)
+                weatherCache.saveWeatherData(response, context)
             }
         },
         { error ->

@@ -5,8 +5,8 @@ import android.content.Context
 import android.location.Geocoder
 import android.util.Log
 import androidx.annotation.RequiresPermission
-import com.example.weather.data.Coordinate
-import com.example.weather.data.weather.saveCity
+import com.example.weather.data.model.Coordinate
+import com.example.weather.logic.weather_cache.saveCity
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.suspendCancellableCoroutine

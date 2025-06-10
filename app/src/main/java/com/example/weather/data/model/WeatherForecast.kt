@@ -1,6 +1,6 @@
 package com.example.weather.data.model
 
-data class Weathers(
+data class WeatherForecast(
 
     var city: String,
 

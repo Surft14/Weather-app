@@ -20,9 +20,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.core.content.ContextCompat
 import com.example.weather.data.model.WeatherInfo
-import com.example.weather.data.const.WeatherCodes
-import com.example.weather.data.weather.readUserCity
-import com.example.weather.data.weather.readWeatherData
 import com.example.weather.logic.GeolocationLogic.getCityFromCoordinate
 import com.example.weather.ui.screens.MainCard
 import com.example.weather.ui.screens.TabLayout
@@ -31,6 +28,8 @@ import com.example.weather.ui.theme.WeatherTheme
 import com.example.weather.utils.GeolocationUtils
 import com.example.weather.logic.weather.getData
 import com.example.weather.logic.weather.getWeatherCondition
+import com.example.weather.logic.weather_cache.impl.WeatherCacheImpl
+import com.example.weather.logic.weather_cache.interfaces.WeatherCache
 import com.example.weather.utils.isNetWorkAvailable
 
 
@@ -40,6 +39,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
+            val weatherCache: WeatherCache = WeatherCacheImpl()
             WeatherTheme {
                 GeolocationUtils.GetGeolocationPermission()
                 val city = remember { mutableStateOf("") }
@@ -51,7 +51,7 @@ class MainActivity : ComponentActivity() {
                 }
                 val imageSkyBox = remember { mutableStateOf(R.drawable.skybox) }
                 LaunchedEffect(Unit) {
-                    readUserCity(this@MainActivity, city)
+                    weatherCache.readUserCity(this@MainActivity, city)
                     Log.d("MyLog", "City location from dataStore: ${city.value}")
                     if (city.value.isBlank()){
                         Log.i("MyLog", "City is blank")
@@ -72,7 +72,7 @@ class MainActivity : ComponentActivity() {
 
                 LaunchedEffect(city.value) {
                     Log.i("MyLog", "read data from cache")
-                    readWeatherData(this@MainActivity, day, daysList)
+                    weatherCache.readWeatherData(this@MainActivity, day, daysList)
                     if (day.value.equals(WeatherInfo()) && daysList.value.isEmpty() && isNetWorkAvailable(this@MainActivity)){
                         Log.i("MyLog", "cache is blank")
                         getData(city.value, this@MainActivity, daysList, day)

@@ -29,7 +29,6 @@ import com.example.weather.R
 import com.example.weather.ui.theme.BlueLight
 import com.example.weather.data.model.WeatherInfo
 
-//city: String = "London", context: Context
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MainCard(day: MutableState<WeatherInfo>, onClickSync: () -> Unit, onClickSearch: () -> Unit) {
