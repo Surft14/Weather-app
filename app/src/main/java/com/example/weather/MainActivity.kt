@@ -28,8 +28,8 @@ import com.example.weather.ui.theme.WeatherTheme
 import com.example.weather.utils.GeolocationUtils
 import com.example.weather.logic.weather.getData
 import com.example.weather.logic.weather.getWeatherCondition
-import com.example.weather.logic.weather_cache.impl.WeatherCacheImpl
-import com.example.weather.logic.weather_cache.interfaces.WeatherCache
+import com.example.weather.logic.cache.impl.WeatherCacheImpl
+import com.example.weather.logic.cache.interfaces.WeatherCache
 import com.example.weather.utils.isNetWorkAvailable
 
 

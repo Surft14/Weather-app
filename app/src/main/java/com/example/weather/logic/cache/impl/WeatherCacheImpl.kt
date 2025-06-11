@@ -1,4 +1,4 @@
-package com.example.weather.logic.weather_cache.impl
+package com.example.weather.logic.cache.impl
 
 import android.content.Context
 import android.util.Log
@@ -11,8 +11,10 @@ import com.example.weather.data.const.PreferencesKey.WEATHER_DATA_KEY
 import com.example.weather.data.dataStore
 import com.example.weather.data.model.WeatherInfo
 import com.example.weather.logic.weather.getWeatherInfoByDays
-import com.example.weather.logic.weather_cache.interfaces.WeatherCache
+import com.example.weather.logic.cache.interfaces.WeatherCache
 import kotlinx.coroutines.flow.first
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 class WeatherCacheImpl : WeatherCache {
     override suspend fun clearStaleWeatherData(context: Context) {
@@ -25,35 +27,28 @@ class WeatherCacheImpl : WeatherCache {
         }
     }
 
-    override suspend fun readWeatherData(
-        context: Context,
-        day: MutableState<WeatherInfo>,
-        dayList: MutableState<List<WeatherInfo>>,
-    ) {
+    override suspend fun readWeatherData(context: Context) : String? {
         val preferences = context.dataStore.data.first()
         val weatherData = preferences[PreferencesKey.WEATHER_DATA_KEY]
         val ts = preferences[PreferencesKey.TIME_MS_KEY] ?: 0L
-        if (System.currentTimeMillis() - ts <= WEATHER_TTL_MS){
-            if (weatherData != null){
-                val list = getWeatherInfoByDays(weatherData)
-                day.value = list[0]
-                dayList.value = list
-            }
+        return if (System.currentTimeMillis() - ts <= WEATHER_TTL_MS){
+            weatherData
         } else{
             Log.i("MyLog", "clear data")
             clearStaleWeatherData(context)
+            null
         }
     }
 
-    override suspend fun readUserCity(
-        context: Context,
-        city: MutableState<String>,
-    ) {
+    override suspend fun readUserCity(context: Context): String? {
         val preferences = context.dataStore.data.first()
         val cityPref = preferences[PreferencesKey.USER_CITY_KEY]
-        if (cityPref != null){
+        return if (cityPref != null){
             Log.d("MyLog", "readUserCity city: $cityPref")
-            city.value = cityPref
+            cityPref
+        } else{
+            Log.d("MyLog", "readUserCity city: $cityPref")
+            null
         }
     }
 

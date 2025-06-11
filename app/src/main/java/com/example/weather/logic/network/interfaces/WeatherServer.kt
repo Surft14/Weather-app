@@ -1,4 +1,4 @@
-package com.example.weather.logic.weather_server.interfaces
+package com.example.weather.logic.network.interfaces
 
 import android.content.Context
 import com.example.weather.data.model.WeatherForecast
@@ -9,10 +9,11 @@ interface WeatherServer {
     suspend fun fetchWeatherJSON(
         city: String,
         context: Context,
-    ) : String?
+    ): String?
+
     suspend fun parseWeatherHour(json: String): List<WeatherHour>
 
     suspend fun parseWeatherNow(json: String): WeatherNow
 
-    suspend fun parseWeathers(json: String): List<WeatherForecast>
+    suspend fun parseWeatherForecast(json: String): List<WeatherForecast>
 }

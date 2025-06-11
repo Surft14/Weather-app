@@ -6,7 +6,8 @@ import android.location.Geocoder
 import android.util.Log
 import androidx.annotation.RequiresPermission
 import com.example.weather.data.model.Coordinate
-import com.example.weather.logic.weather_cache.saveCity
+import com.example.weather.logic.cache.impl.WeatherCacheImpl
+import com.example.weather.logic.cache.interfaces.WeatherCache
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -15,7 +16,7 @@ import kotlin.coroutines.resume
 
 object GeolocationLogic {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-
+    private val weatherCache: WeatherCache = WeatherCacheImpl()
     @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
     private suspend fun Context.getCoordinate(context: Context): Coordinate? =
         suspendCancellableCoroutine { cont ->
@@ -54,7 +55,7 @@ object GeolocationLogic {
             val geocoder = Geocoder(context, java.util.Locale.ENGLISH)
             val address = geocoder.getFromLocation(coordinate.latitude, coordinate.longitude, 1)
             Log.d("MyLog", "Locale city: ${address?.get(0)?.locality}")
-            saveCity(address?.firstOrNull()?.locality.toString(), context)
+            weatherCache.saveCity(address?.firstOrNull()?.locality.toString(), context)
             return address?.firstOrNull()?.locality
         }
 

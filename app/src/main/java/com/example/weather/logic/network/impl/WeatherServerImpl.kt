@@ -1,4 +1,4 @@
-package com.example.weather.logic.weather_server.impl
+package com.example.weather.logic.network.impl
 
 import android.content.Context
 import android.util.Log
@@ -8,7 +8,7 @@ import com.android.volley.toolbox.Volley
 import com.example.weather.data.model.WeatherForecast
 import com.example.weather.data.model.WeatherHour
 import com.example.weather.data.model.WeatherNow
-import com.example.weather.logic.weather_server.interfaces.WeatherServer
+import com.example.weather.logic.network.interfaces.WeatherServer
 import org.json.JSONObject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -127,7 +127,7 @@ class WeatherServerImpl() : WeatherServer {
         return weatherNow
     }
 
-    override suspend fun parseWeathers(json: String): List<WeatherForecast> {
+    override suspend fun parseWeatherForecast(json: String): List<WeatherForecast> {
         if (json.isEmpty()) return listOf()
         Log.d("MyLog", "getWeathers start")
 
