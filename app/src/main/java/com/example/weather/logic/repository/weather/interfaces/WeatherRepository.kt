@@ -1,13 +1,11 @@
-package com.example.weather.logic.repository.interfaces
+package com.example.weather.logic.repository.weather.interfaces
 
 import android.content.Context
+import com.example.weather.data.model.Coordinate
 import com.example.weather.data.model.WeatherForecast
 import com.example.weather.data.model.WeatherHour
 import com.example.weather.data.model.WeatherInfo
 import com.example.weather.data.model.WeatherNow
-import com.example.weather.logic.cache.interfaces.WeatherCache
-import com.example.weather.logic.network.interfaces.WeatherServer
-
 
 interface WeatherRepository {
 
@@ -16,6 +14,7 @@ interface WeatherRepository {
     suspend fun parseWeatherNow(json: String): WeatherNow
     suspend fun parseWeatherHour(json: String): List<WeatherHour>
     suspend fun parseWeatherForecast(json: String): List<WeatherForecast>
+    suspend fun parseWeather(json: String): WeatherInfo
 
     suspend fun fetchAndParseWeather(city: String, context: Context): WeatherInfo
 
