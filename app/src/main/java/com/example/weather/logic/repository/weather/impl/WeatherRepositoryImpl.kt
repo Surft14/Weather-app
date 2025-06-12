@@ -7,8 +7,6 @@ import com.example.weather.data.model.WeatherInfo
 import com.example.weather.data.model.WeatherNow
 import com.example.weather.logic.cache.impl.WeatherCacheImpl
 import com.example.weather.logic.cache.interfaces.WeatherCache
-import com.example.weather.logic.geo.impl.GeolocationImpl
-import com.example.weather.logic.geo.interfaces.Geolocation
 import com.example.weather.logic.network.impl.WeatherServerImpl
 import com.example.weather.logic.network.interfaces.WeatherServer
 import com.example.weather.logic.repository.weather.interfaces.WeatherRepository
@@ -16,7 +14,6 @@ import com.example.weather.logic.repository.weather.interfaces.WeatherRepository
 class WeatherRepositoryImpl(
     private val weatherCache: WeatherCache = WeatherCacheImpl(),
     private val weatherServer: WeatherServer = WeatherServerImpl(),
-    private val geolocation: Geolocation = GeolocationImpl(),
 ) : WeatherRepository {
     override suspend fun fetchWeatherJSON(
         city: String,
@@ -41,7 +38,8 @@ class WeatherRepositoryImpl(
         return weatherServer.parseWeatherForecast(json)
     }
 
-    override suspend fun parseWeather(json: String): WeatherInfo {
+    override suspend fun parseWeather(json: String, context: Context): WeatherInfo {
+        weatherCache.saveWeatherData(json, context)
         return WeatherInfo(
             weatherNow = parseWeatherNow(json),
             listWeatherHour = parseWeatherHour(json),
@@ -51,6 +49,8 @@ class WeatherRepositoryImpl(
 
     override suspend fun fetchAndParseWeather(city: String, context: Context): WeatherInfo {
         val json = fetchWeatherJSON(city, context)
+        weatherCache.saveWeatherData(json.toString(), context)
+        weatherCache.saveCity(city, context)
         val weatherInfo: WeatherInfo = WeatherInfo()
         if (json != null) {
             weatherInfo.weatherNow = parseWeatherNow(json)
