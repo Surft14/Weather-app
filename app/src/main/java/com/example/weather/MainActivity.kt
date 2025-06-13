@@ -9,6 +9,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.LaunchedEffect
@@ -19,41 +20,46 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
 import com.example.weather.data.model.WeatherInfo
-import com.example.weather.logic.GeolocationLogic.getCityFromCoordinate
+import com.example.weather.data.model.WeatherNow
+import com.example.weather.logic.repository.geo.impl.GeolocationRepositoryImpl
+import com.example.weather.logic.repository.weather.impl.WeatherRepositoryImpl
+import com.example.weather.ui.screens.DialogSearch
 import com.example.weather.ui.screens.MainCard
 import com.example.weather.ui.screens.TabLayout
-import com.example.weather.ui.screens.DialogSearch
 import com.example.weather.ui.theme.WeatherTheme
+import com.example.weather.ui.viewmodel.WeatherViewModel
+import com.example.weather.ui.viewmodel.WeatherViewModelFactory
 import com.example.weather.utils.GeolocationUtils
-import com.example.weather.logic.weather.getData
-import com.example.weather.logic.weather.getWeatherCondition
-import com.example.weather.logic.cache.impl.WeatherCacheImpl
-import com.example.weather.logic.cache.interfaces.WeatherCache
+import com.example.weather.utils.getWeatherCondition
 import com.example.weather.utils.isNetWorkAvailable
 
 
 class MainActivity : ComponentActivity() {
+    lateinit var viewModel: WeatherViewModel
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val weatherRepo = WeatherRepositoryImpl()
+        val geoRepo = GeolocationRepositoryImpl()
+
+        val factory = WeatherViewModelFactory(weatherRepo, geoRepo)
+
+        viewModel = ViewModelProvider(this, factory)[WeatherViewModel::class.java]
+
+
+
         setContent {
-            val weatherCache: WeatherCache = WeatherCacheImpl()
             WeatherTheme {
                 GeolocationUtils.GetGeolocationPermission()
-                val city = remember { mutableStateOf("") }
-                val daysList = remember {
-                    mutableStateOf(listOf<WeatherInfo>())
-                }
-                val day = remember {
-                    mutableStateOf(WeatherInfo())
-                }
+
                 val imageSkyBox = remember { mutableStateOf(R.drawable.skybox) }
                 LaunchedEffect(Unit) {
-                    weatherCache.readUserCity(this@MainActivity, city)
-                    Log.d("MyLog", "City location from dataStore: ${city.value}")
-                    if (city.value.isBlank()){
+                    Log.d("MyLog", "City location from dataStore: ${viewModel.cityState.value}")
+                    if (viewModel.cityState.value?.isBlank() == true) {
                         Log.i("MyLog", "City is blank")
                         if (ContextCompat.checkSelfPermission(
                                 this@MainActivity,
@@ -65,51 +71,59 @@ class MainActivity : ComponentActivity() {
                             ) == PackageManager.PERMISSION_GRANTED
                         ) {
                             Log.i("MyLog", "get city from geolocation")
-                            city.value = getCityFromCoordinate(this@MainActivity) ?: "Moscow"
+                            viewModel.loadCity(this@MainActivity)
                         }
                     }
                 }
 
-                LaunchedEffect(city.value) {
+                LaunchedEffect(viewModel.cityState.value) {
                     Log.i("MyLog", "read data from cache")
-                    weatherCache.readWeatherData(this@MainActivity, day, daysList)
-                    if (day.value.equals(WeatherInfo()) && daysList.value.isEmpty() && isNetWorkAvailable(this@MainActivity)){
+                    if (viewModel.weatherInfoState.value == null && isNetWorkAvailable(
+                            this@MainActivity
+                        )
+                    ) {
                         Log.i("MyLog", "cache is blank")
-                        getData(city.value, this@MainActivity, daysList, day)
+                        viewModel.loadCityAndWeather(this@MainActivity)
                     }
-                    imageSkyBox.value = getWeatherCondition(day.value)
-                }
-                val dialogState = remember {
-                    mutableStateOf(false)
-                }
-                if (dialogState.value) {
-                    DialogSearch(dialogState, onSubmit = { city ->
-                        getData(city, this, daysList, day)
-                    })
+                    imageSkyBox.value = getWeatherCondition(viewModel.weatherInfoState.value)
                 }
 
+                Box() {
+                    if (viewModel.dialogState.value == true) {
+                        DialogSearch(viewModel, onSubmit = { city ->
+                            viewModel.loadWeather(city, this@MainActivity)
 
-                imageSkyBox.value = getWeatherCondition(day.value)
-                Image(
-                    painter = painterResource(imageSkyBox.value),
-                    contentDescription = "Background blue sky",
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .alpha(0.7f),
-                    contentScale = ContentScale.FillBounds,
-                )
-                Column {
-                    MainCard(
-                        day,
-                        onClickSync = {
-                            getData(city.value, this@MainActivity, daysList, day)
-                        },
-                        onClickSearch = {
-                            dialogState.value = true
-                        }
+
+                        })
+                    }
+                    Image(
+                        painter = painterResource(imageSkyBox.value),
+                        contentDescription = "Background blue sky",
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .alpha(0.7f),
+                        contentScale = ContentScale.FillBounds,
                     )
-                    TabLayout(daysList, day)
+                    Column {
+                        MainCard(
+                            viewModel.weatherInfoState.value?.weatherNow ?: WeatherNow(),
+                            onClickSync = {
+                                viewModel.loadWeather(
+                                    viewModel.cityState.value.toString(),
+                                    this@MainActivity
+                                )
+                            },
+                            onClickSearch = {
+                                viewModel.showDialog()
+                            }
+                        )
+                        TabLayout(
+                            viewModel.weatherInfoState.value?.listWeatherForecast ?: listOf(),
+                            viewModel.weatherInfoState.value?.listWeatherHour ?: listOf()
+                        )
+                    }
                 }
+
             }
         }
     }

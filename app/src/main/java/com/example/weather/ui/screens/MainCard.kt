@@ -16,7 +16,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,11 +26,11 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.weather.R
 import com.example.weather.ui.theme.BlueLight
-import com.example.weather.data.model.WeatherInfo
+import com.example.weather.data.model.WeatherNow
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun MainCard(day: MutableState<WeatherInfo>, onClickSync: () -> Unit, onClickSearch: () -> Unit) {
+fun MainCard(day: WeatherNow, onClickSync: () -> Unit, onClickSearch: () -> Unit) {
     Log.d("MyLog", "MainCard start")
     Column(
         modifier = Modifier
@@ -57,13 +56,13 @@ fun MainCard(day: MutableState<WeatherInfo>, onClickSync: () -> Unit, onClickSea
                 ) {
                     Text(
 // Текст даты
-                        day.value.time,
+                        day.dateTime,
                         modifier = Modifier.padding(top = 9.dp, start = 8.dp),
                         style = TextStyle(fontSize = 15.sp),
                     )
                     AsyncImage(
 // Иконка погоды
-                        model = "https:${day.value.icon}",
+                        model = "https:${day.icon}",
                         contentDescription = "icon weather",
                         modifier = Modifier
                             .size(40.dp)
@@ -71,24 +70,19 @@ fun MainCard(day: MutableState<WeatherInfo>, onClickSync: () -> Unit, onClickSea
                     )
                 }
                 Text(
-                    day.value.city,
+                    day.city,
                     style = TextStyle(fontSize = 24.sp),
                 )
                 Text(
 //Нынешняя температура и как ощущаеться
-                    "${day.value.temp.ifEmpty { day.value.tempMax }}ºC/feel ${day.value.feelLike.ifEmpty { day.value.tempMin }}ºC",
+                    "${day.temp.ifEmpty { 0 }}ºC/feel ${day.feelLike.ifEmpty { 0 }}ºC",
                     style = TextStyle(fontSize = 40.sp),
                     modifier = Modifier.padding(10.dp),
                 )
                 Text(
 // Погода
-                    "${day.value.weather}",
+                    "${day.text}",
                     style = TextStyle(fontSize = 16.sp),
-                )
-                Text(
-// Теипература макс и мин
-                    "max ${day.value.tempMax}ºC/ min ${day.value.tempMin}ºC",
-                    style = TextStyle(fontSize = 20.sp),
                 )
                 Row(
                     modifier = Modifier
@@ -97,7 +91,7 @@ fun MainCard(day: MutableState<WeatherInfo>, onClickSync: () -> Unit, onClickSea
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        text = "${day.value.wind} kph",
+                        text = "${day.speed} kph",
                         style = TextStyle(fontSize = 16.sp),
                         modifier = Modifier.padding(end = 10.dp, top = 5.dp),
                     )
@@ -106,7 +100,7 @@ fun MainCard(day: MutableState<WeatherInfo>, onClickSync: () -> Unit, onClickSea
                     ) {
                         Icon(
                             painter = painterResource(
-                                when (day.value.windDir) {
+                                when (day.dir) {
                                     "N" -> R.drawable.n
                                     "NNE" -> R.drawable.nne
                                     "NE" -> R.drawable.ne
@@ -130,7 +124,7 @@ fun MainCard(day: MutableState<WeatherInfo>, onClickSync: () -> Unit, onClickSea
                             modifier = Modifier.size(20.dp),
                         )
                         Text(
-                            text = "${day.value.windDir}",
+                            text = day.dir,
                             style = TextStyle(fontSize = 11.sp),
                             modifier = Modifier.padding(bottom = 10.dp),
                         )

@@ -142,6 +142,7 @@ class WeatherServerImpl() : WeatherServer {
             listWeathers.add(
                 WeatherForecast(
                     city = weathersItem.getString("city"),
+                    date = weathersItem.getString("date"),
                     avgTemp = weathersItem.getString("avgTemp"),
                     maxWind = weathersItem.getString("maxWind"),
                     text = weathersItem.getString("text"),

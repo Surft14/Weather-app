@@ -7,30 +7,30 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import com.example.weather.ui.viewmodel.WeatherViewModel
 
 @Composable
-fun DialogSearch(dialogState: MutableState<Boolean>, onSubmit: (String) -> Unit) {
+fun DialogSearch(viewModel: WeatherViewModel, onSubmit: (String) -> Unit) {
     val dialogText = remember {
         mutableStateOf("")
     }
     AlertDialog(
         onDismissRequest = {
-            dialogState.value = false
+            viewModel.hideDialog()
         },
         confirmButton = {
             TextButton(onClick = {
-                dialogState.value = false
+                viewModel.hideDialog()
                 onSubmit(dialogText.value)
             }) {
                 Text("OK")
             }
         },
         dismissButton = {
-            TextButton(onClick = { dialogState.value = false }) {
+            TextButton(onClick = { viewModel.hideDialog() }) {
                 Text("CANCEL")
             }
         },

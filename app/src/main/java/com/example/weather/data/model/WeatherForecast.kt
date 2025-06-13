@@ -10,6 +10,7 @@ data class WeatherForecast(
     var text: String,
     var icon: String,
     var code: Int,
+    val date: String,
 )
 
 

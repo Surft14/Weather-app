@@ -4,9 +4,9 @@ import com.example.weather.R
 import com.example.weather.data.model.WeatherInfo
 import com.example.weather.data.const.WeatherCodes
 
-fun getWeatherCondition(day: WeatherInfo): Int {
+fun getWeatherCondition(day: WeatherInfo?): Int {
 
-    return when (day.weatherNow.code) {
+    return when (day?.weatherNow?.code) {
         WeatherCodes.SUNNY -> {
             // Солнечно
             R.drawable.skybox
