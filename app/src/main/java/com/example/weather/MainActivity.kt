@@ -21,7 +21,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
-import com.example.weather.data.model.WeatherInfo
 import com.example.weather.data.model.WeatherNow
 import com.example.weather.logic.repository.geo.impl.GeolocationRepositoryImpl
 import com.example.weather.logic.repository.weather.impl.WeatherRepositoryImpl
@@ -108,10 +107,7 @@ class MainActivity : ComponentActivity() {
                         MainCard(
                             viewModel.weatherInfoState.value?.weatherNow ?: WeatherNow(),
                             onClickSync = {
-                                viewModel.loadWeather(
-                                    viewModel.cityState.value.toString(),
-                                    this@MainActivity
-                                )
+                                viewModel.refreshWeather(this@MainActivity)
                             },
                             onClickSearch = {
                                 viewModel.showDialog()

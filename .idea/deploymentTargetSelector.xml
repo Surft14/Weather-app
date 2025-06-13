@@ -4,10 +4,10 @@
     <selectionStates>
       <SelectionState runConfigName="Unnamed">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2025-02-13T18:53:48.189717800Z">
+        <DropdownSelection timestamp="2025-06-13T12:34:52.361957600Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="PhysicalDevice" identifier="serial=RFCT315FCZD" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\likea\.android\avd\Samsung_m33_API_35.ini" />
             </handle>
           </Target>
         </DropdownSelection>

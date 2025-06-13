@@ -8,6 +8,7 @@ import com.android.volley.toolbox.Volley
 import com.example.weather.data.model.WeatherForecast
 import com.example.weather.data.model.WeatherHour
 import com.example.weather.data.model.WeatherNow
+import com.example.weather.logic.network.CustomHurlStack
 import com.example.weather.logic.network.interfaces.WeatherServer
 import org.json.JSONObject
 import kotlin.coroutines.resume
@@ -20,8 +21,9 @@ class WeatherServerImpl() : WeatherServer {
         context: Context,
     ) : String? = suspendCoroutine { continuation ->
         Log.d("MyLog", "WeatherFunctionImpl start")
-        val url = "http:localhost:8085/api/v1/weathers_now/get/db/city/weather_now?city=$city"
-        val queue = Volley.newRequestQueue(context)
+        val requestQueue = Volley.newRequestQueue(context, CustomHurlStack(context))
+
+        val url = "https://192.168.0.122:8443/api/v1/weathers_now/get/db/city/weather_now?city=$city"
         val stringRequest = StringRequest(
             Request.Method.GET,
             url,
@@ -33,7 +35,7 @@ class WeatherServerImpl() : WeatherServer {
                 continuation.resume(null)
             }
         )
-        queue.add(stringRequest)
+        requestQueue.add(stringRequest)
     }
 
     override suspend fun parseWeatherHour(json: String): List<WeatherHour> {

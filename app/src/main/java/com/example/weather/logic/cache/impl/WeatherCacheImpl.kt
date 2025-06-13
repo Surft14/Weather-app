@@ -2,19 +2,14 @@ package com.example.weather.logic.cache.impl
 
 import android.content.Context
 import android.util.Log
-import androidx.compose.runtime.MutableState
 import androidx.datastore.preferences.core.edit
 import com.example.weather.data.const.Const.WEATHER_TTL_MS
 import com.example.weather.data.const.PreferencesKey
 import com.example.weather.data.const.PreferencesKey.TIME_MS_KEY
 import com.example.weather.data.const.PreferencesKey.WEATHER_DATA_KEY
 import com.example.weather.data.dataStore
-import com.example.weather.data.model.WeatherInfo
-import com.example.weather.logic.weather.getWeatherInfoByDays
 import com.example.weather.logic.cache.interfaces.WeatherCache
 import kotlinx.coroutines.flow.first
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 class WeatherCacheImpl : WeatherCache {
     override suspend fun clearStaleWeatherData(context: Context) {
@@ -27,13 +22,13 @@ class WeatherCacheImpl : WeatherCache {
         }
     }
 
-    override suspend fun readWeatherData(context: Context) : String? {
+    override suspend fun readWeatherData(context: Context): String? {
         val preferences = context.dataStore.data.first()
         val weatherData = preferences[PreferencesKey.WEATHER_DATA_KEY]
         val ts = preferences[PreferencesKey.TIME_MS_KEY] ?: 0L
-        return if (System.currentTimeMillis() - ts <= WEATHER_TTL_MS){
+        return if (System.currentTimeMillis() - ts <= WEATHER_TTL_MS) {
             weatherData
-        } else{
+        } else {
             Log.i("MyLog", "clear data")
             clearStaleWeatherData(context)
             null
@@ -43,10 +38,10 @@ class WeatherCacheImpl : WeatherCache {
     override suspend fun readUserCity(context: Context): String? {
         val preferences = context.dataStore.data.first()
         val cityPref = preferences[PreferencesKey.USER_CITY_KEY]
-        return if (cityPref != null){
+        return if (cityPref != null) {
             Log.d("MyLog", "readUserCity city: $cityPref")
             cityPref
-        } else{
+        } else {
             Log.d("MyLog", "readUserCity city: $cityPref")
             null
         }
