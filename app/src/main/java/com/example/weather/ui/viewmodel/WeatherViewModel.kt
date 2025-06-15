@@ -2,6 +2,9 @@ package com.example.weather.ui.viewmodel
 
 import android.content.Context
 import android.util.Log
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -15,23 +18,23 @@ class WeatherViewModel(
     private val weatherRepository: WeatherRepository,
     private val geolocationRepository: GeolocationRepository,
 ) : ViewModel() {
-    private val _weatherInfoState: MutableLiveData<WeatherInfo?> =
-        MutableLiveData<WeatherInfo?>(null)
-    val weatherInfoState: LiveData<WeatherInfo?> = _weatherInfoState
+    private val _weatherInfoState = mutableStateOf<WeatherInfo?>(null)
+    val weatherInfoState: State<WeatherInfo?> = _weatherInfoState
 
-    private val _dialogState: MutableLiveData<Boolean> = MutableLiveData(false)
-    val dialogState: LiveData<Boolean> = _dialogState
+    private val _dialogState = mutableStateOf(false)
+    val dialogState: State<Boolean> = _dialogState
 
-    private val _cityState: MutableLiveData<String> = MutableLiveData("")
-    val cityState: LiveData<String> = _cityState
+    private val _cityState = mutableStateOf("")
+    val cityState: State<String> = _cityState
 
-    private val _isLoadingState: MutableLiveData<Boolean> = MutableLiveData(false)
-    val isLoadingState: LiveData<Boolean> = _isLoadingState
+    private val _isLoadingState = mutableStateOf(false)
+    val isLoadingState: State<Boolean> = _isLoadingState
 
-    private val _errorState = MutableLiveData<String?>()
-    val errorState: LiveData<String?> = _errorState
+    private val _errorState = mutableStateOf<String?>("")
+    val errorState: State<String?> = _errorState
 
     fun loadWeather(city: String, context: Context) {
+        Log.d("MyLog", "ViewModel loadWeather start")
         _isLoadingState.value = true
         viewModelScope.launch {
             try {
@@ -57,6 +60,7 @@ class WeatherViewModel(
     }
 
     fun refreshWeather(context: Context) {
+        Log.d("MyLog", "ViewModel refreshWeather start")
         val city = _cityState.value ?: return
         _isLoadingState.value = true
         viewModelScope.launch {
@@ -73,6 +77,7 @@ class WeatherViewModel(
     }
 
     fun loadCityAndWeather(context: Context) {
+        Log.d("MyLog", "ViewModel loadCityAndWeather start")
         _isLoadingState.value = true
         viewModelScope.launch {
             try {
@@ -98,6 +103,7 @@ class WeatherViewModel(
     }
 
     fun loadCity(context: Context) {
+        Log.d("MyLog", "ViewModel loadCity start")
         _isLoadingState.value = true
         viewModelScope.launch {
             try {
@@ -118,14 +124,17 @@ class WeatherViewModel(
     }
 
     fun clearError() {
+        Log.d("MyLog", "ViewModel clearError start")
         _errorState.value = null
     }
 
     fun showDialog() {
+        Log.d("MyLog", "ViewModel showDialog start")
         _dialogState.value = true
     }
 
     fun hideDialog() {
+        Log.d("MyLog", "ViewModel hideDialog start")
         _dialogState.value = false
     }
 

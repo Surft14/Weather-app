@@ -1,5 +1,6 @@
 package com.example.weather.ui.screens.item
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -23,6 +24,7 @@ import com.example.weather.ui.theme.BlueLight
 
 @Composable
 fun HourItem (hour: WeatherHour) {
+    Log.d("MyLog", "HourItem start")
     Card(
         modifier = Modifier
             .fillMaxWidth()

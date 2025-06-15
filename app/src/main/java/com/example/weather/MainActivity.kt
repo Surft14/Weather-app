@@ -57,9 +57,8 @@ class MainActivity : ComponentActivity() {
 
                 val imageSkyBox = remember { mutableStateOf(R.drawable.skybox) }
                 LaunchedEffect(Unit) {
-                    Log.d("MyLog", "City location from dataStore: ${viewModel.cityState.value}")
-                    if (viewModel.cityState.value?.isBlank() == true) {
-                        Log.i("MyLog", "City is blank")
+                    if (viewModel.cityState.value.isNullOrBlank()) {
+                        Log.i("MyLog", "MainActivity: City from ViewModel is blank")
                         if (ContextCompat.checkSelfPermission(
                                 this@MainActivity,
                                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -69,19 +68,18 @@ class MainActivity : ComponentActivity() {
                                 Manifest.permission.ACCESS_COARSE_LOCATION
                             ) == PackageManager.PERMISSION_GRANTED
                         ) {
-                            Log.i("MyLog", "get city from geolocation")
+                            Log.i("MyLog", "MainActivity: loading city with viewmodel")
                             viewModel.loadCity(this@MainActivity)
                         }
                     }
                 }
 
                 LaunchedEffect(viewModel.cityState.value) {
-                    Log.i("MyLog", "read data from cache")
                     if (viewModel.weatherInfoState.value == null && isNetWorkAvailable(
                             this@MainActivity
                         )
                     ) {
-                        Log.i("MyLog", "cache is blank")
+                        Log.i("MyLog", "MainActivity: loading city and weather data with viewmodel")
                         viewModel.loadCityAndWeather(this@MainActivity)
                     }
                     imageSkyBox.value = getWeatherCondition(viewModel.weatherInfoState.value)
@@ -91,8 +89,6 @@ class MainActivity : ComponentActivity() {
                     if (viewModel.dialogState.value == true) {
                         DialogSearch(viewModel, onSubmit = { city ->
                             viewModel.loadWeather(city, this@MainActivity)
-
-
                         })
                     }
                     Image(
@@ -104,6 +100,7 @@ class MainActivity : ComponentActivity() {
                         contentScale = ContentScale.FillBounds,
                     )
                     Column {
+                        Log.i("MyLog", "MainActivity: start MainCard")
                         MainCard(
                             viewModel.weatherInfoState.value?.weatherNow ?: WeatherNow(),
                             onClickSync = {
@@ -113,9 +110,10 @@ class MainActivity : ComponentActivity() {
                                 viewModel.showDialog()
                             }
                         )
+                        Log.i("MyLog", "MainActivity: start TabLayout")
                         TabLayout(
                             viewModel.weatherInfoState.value?.listWeatherForecast ?: listOf(),
-                            viewModel.weatherInfoState.value?.listWeatherHour ?: listOf()
+                            viewModel.weatherInfoState.value?.listWeatherHour ?: listOf(),
                         )
                     }
                 }

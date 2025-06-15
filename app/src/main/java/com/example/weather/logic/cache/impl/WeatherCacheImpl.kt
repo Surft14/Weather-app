@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.first
 
 class WeatherCacheImpl : WeatherCache {
     override suspend fun clearStaleWeatherData(context: Context) {
+        Log.d("MyLog", "Cache clearStaleWeatherData start")
         context.dataStore.edit { prefs ->
             val ts = prefs[TIME_MS_KEY] ?: return@edit
             if (System.currentTimeMillis() - ts > WEATHER_TTL_MS) {
@@ -23,6 +24,7 @@ class WeatherCacheImpl : WeatherCache {
     }
 
     override suspend fun readWeatherData(context: Context): String? {
+        Log.d("MyLog", "Cache readWeatherData start")
         val preferences = context.dataStore.data.first()
         val weatherData = preferences[PreferencesKey.WEATHER_DATA_KEY]
         val ts = preferences[PreferencesKey.TIME_MS_KEY] ?: 0L
@@ -36,6 +38,7 @@ class WeatherCacheImpl : WeatherCache {
     }
 
     override suspend fun readUserCity(context: Context): String? {
+        Log.d("MyLog", "Cache readUserCity start")
         val preferences = context.dataStore.data.first()
         val cityPref = preferences[PreferencesKey.USER_CITY_KEY]
         return if (cityPref != null) {
@@ -48,6 +51,7 @@ class WeatherCacheImpl : WeatherCache {
     }
 
     override suspend fun saveCity(city: String, context: Context) {
+        Log.d("MyLog", "Cache saveCity start")
         context.dataStore.edit { pref ->
             pref[PreferencesKey.USER_CITY_KEY] = city
         }
@@ -57,6 +61,7 @@ class WeatherCacheImpl : WeatherCache {
         weatherDataJSON: String,
         context: Context,
     ) {
+        Log.d("MyLog", "Cache saveWeatherData start")
         val ts = System.currentTimeMillis()
         context.dataStore.edit { preferences ->
             preferences[PreferencesKey.WEATHER_DATA_KEY] = weatherDataJSON

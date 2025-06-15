@@ -31,7 +31,7 @@ import com.example.weather.data.model.WeatherNow
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MainCard(day: WeatherNow, onClickSync: () -> Unit, onClickSearch: () -> Unit) {
-    Log.d("MyLog", "MainCard start")
+    Log.d("MyLog", "MainActivity: start MainCard")
     Column(
         modifier = Modifier
             .padding(4.dp),

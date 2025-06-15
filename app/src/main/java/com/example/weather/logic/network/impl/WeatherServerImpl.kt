@@ -20,7 +20,7 @@ class WeatherServerImpl() : WeatherServer {
         city: String,
         context: Context,
     ) : String? = suspendCoroutine { continuation ->
-        Log.d("MyLog", "WeatherFunctionImpl start")
+        Log.d("MyLog", "server fetchWeatherJSON start")
         val requestQueue = Volley.newRequestQueue(context, CustomHurlStack(context))
 
         val url = "https://192.168.0.122:8443/api/v1/weathers_now/get/db/city/weather_now?city=$city"
@@ -28,6 +28,7 @@ class WeatherServerImpl() : WeatherServer {
             Request.Method.GET,
             url,
             { response ->
+                Log.i("MyLog", "server fetchWeatherJSON info: $response")
                 continuation.resume(response)
             },
             { err ->
@@ -36,10 +37,11 @@ class WeatherServerImpl() : WeatherServer {
             }
         )
         requestQueue.add(stringRequest)
+        Log.i("MyLog", "server fetchWeatherJSON info: $stringRequest")
     }
 
     override suspend fun parseWeatherHour(json: String): List<WeatherHour> {
-        Log.d("MyLog", "getWeatherHour start")
+        Log.d("MyLog", "server parseWeatherHour start")
         if (json.isEmpty()) return listOf()
 
         val listWeatherHour : ArrayList<WeatherHour> = ArrayList<WeatherHour>()
@@ -69,12 +71,12 @@ class WeatherServerImpl() : WeatherServer {
             )
 
         }
-
+        Log.i("MyLog", "server parseWeatherHour info: ${listWeatherHour[1]}")
         return listWeatherHour
     }
 
     override suspend fun parseWeatherNow(json: String): WeatherNow {
-        Log.d("MyLog", "getWeatherNow Start")
+        Log.d("MyLog", "server parseWeatherNow Start")
         if (json.isEmpty()) return WeatherNow(
             city = "",
             region = "",
@@ -123,15 +125,15 @@ class WeatherServerImpl() : WeatherServer {
             weatherNow.icon = mainOdj.getString("icon")
             weatherNow.code = mainOdj.getInt("code")
         }catch (e : Exception){
-            Log.e("MyLog", " getWeatherNow Error: $e")
+            Log.e("MyLog", "server parseWeatherNow Error: $e")
         }
-
+        Log.i("MyLog", "server parseWeatherNow info: $weatherNow")
         return weatherNow
     }
 
     override suspend fun parseWeatherForecast(json: String): List<WeatherForecast> {
         if (json.isEmpty()) return listOf()
-        Log.d("MyLog", "getWeathers start")
+        Log.d("MyLog", "server parseWeatherForecast start")
 
         val listWeathers = ArrayList<WeatherForecast>()
         val mainOdj = JSONObject(json)
@@ -154,7 +156,7 @@ class WeatherServerImpl() : WeatherServer {
             )
 
         }
-
+        Log.i("MyLog", "server parseWeatherForecast info: ${listWeathers[1]}")
         return listWeathers
     }
 }

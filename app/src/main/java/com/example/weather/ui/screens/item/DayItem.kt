@@ -1,5 +1,6 @@
 package com.example.weather.ui.screens.item
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,6 +23,7 @@ import com.example.weather.ui.theme.BlueLight
 
 @Composable
 fun DayItem(day: WeatherForecast) {
+    Log.d("MyLog", "DayItem start")
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -43,7 +45,7 @@ fun DayItem(day: WeatherForecast) {
                     color = Color.White,
                     style = TextStyle(fontSize = 20.sp)
                 )
-                Row(){
+                Row() {
                     Text(
                         day.text,
                         color = Color.White,
