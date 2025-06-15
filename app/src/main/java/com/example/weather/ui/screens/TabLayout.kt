@@ -79,7 +79,6 @@ fun TabLayout(
             val currentList = when (Index) {
                 0 -> LazyColumn(modifier = Modifier.fillMaxSize()) {
                     items(hourList) { HourItem(it) }
-
                 }
 
                 1 -> LazyColumn(modifier = Modifier.fillMaxSize()) {

@@ -1,5 +1,6 @@
 package com.example.weather.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.AlertDialog
@@ -14,6 +15,7 @@ import com.example.weather.ui.viewmodel.WeatherViewModel
 
 @Composable
 fun DialogSearch(viewModel: WeatherViewModel, onSubmit: (String) -> Unit) {
+    Log.d("MyLog", "DialogSearch start")
     val dialogText = remember {
         mutableStateOf("")
     }

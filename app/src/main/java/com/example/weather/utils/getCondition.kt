@@ -1,10 +1,15 @@
 package com.example.weather.utils
 
+import android.util.Log
+import androidx.compose.runtime.Composable
 import com.example.weather.R
 import com.example.weather.data.model.WeatherInfo
 import com.example.weather.data.const.WeatherCodes
-
+@Composable
 fun getWeatherCondition(day: WeatherInfo?): Int {
+
+    Log.d("MyLog", "getWeatherCondition start")
+    Log.i("MyLog", "getWeatherCondition info: $day")
 
     return when (day?.weatherNow?.code) {
         WeatherCodes.SUNNY -> {

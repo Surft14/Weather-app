@@ -22,8 +22,9 @@ class WeatherServerImpl() : WeatherServer {
     ) : String? = suspendCoroutine { continuation ->
         Log.d("MyLog", "server fetchWeatherJSON start")
         val requestQueue = Volley.newRequestQueue(context, CustomHurlStack(context))
-
-        val url = "https://192.168.0.122:8443/api/v1/weathers_now/get/db/city/weather_now?city=$city"
+        //192.168.0.122
+        //85.234.7.243
+        val url = "https://85.234.7.243:8443/api/v1/weathers_now/get/db/city/weather_now?city=$city"
         val stringRequest = StringRequest(
             Request.Method.GET,
             url,
@@ -107,23 +108,25 @@ class WeatherServerImpl() : WeatherServer {
         )
 
         try{
-            val mainOdj = JSONObject(json)
+            val mainObj = JSONObject(json)
 
-            weatherNow.city = mainOdj.getString("city")
-            weatherNow.region = mainOdj.getString("region")
-            weatherNow.country = mainOdj.getString("country")
+            weatherNow.city = mainObj.getString("city")
+            weatherNow.region = mainObj.getString("region")
+            weatherNow.country = mainObj.getString("country")
 
-            weatherNow.dateTime = mainOdj.getString("dateTime")
-            weatherNow.lastDateTime = mainOdj.getString("lastUpdateTime")
+            val rawDate = mainObj.getString("dateTime")
+            val formattedDate = rawDate.replace("T", " ")
+            weatherNow.dateTime = formattedDate
+            weatherNow.lastDateTime = mainObj.getString("lastUpdateTime")
 
-            weatherNow.temp = mainOdj.getString("temp")
-            weatherNow.feelLike = mainOdj.getString("feelLike")
-            weatherNow.dir = mainOdj.getString("dir")
-            weatherNow.speed = mainOdj.getString("speed")
+            weatherNow.temp = mainObj.getString("temp")
+            weatherNow.feelLike = mainObj.getString("feelLike")
+            weatherNow.dir = mainObj.getString("dir")
+            weatherNow.speed = mainObj.getString("speed")
 
-            weatherNow.text = mainOdj.getString("text")
-            weatherNow.icon = mainOdj.getString("icon")
-            weatherNow.code = mainOdj.getInt("code")
+            weatherNow.text = mainObj.getString("text")
+            weatherNow.icon = mainObj.getString("icon")
+            weatherNow.code = mainObj.getInt("code")
         }catch (e : Exception){
             Log.e("MyLog", "server parseWeatherNow Error: $e")
         }

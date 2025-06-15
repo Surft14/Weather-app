@@ -82,15 +82,17 @@ class MainActivity : ComponentActivity() {
                         Log.i("MyLog", "MainActivity: loading city and weather data with viewmodel")
                         viewModel.loadCityAndWeather(this@MainActivity)
                     }
-                    imageSkyBox.value = getWeatherCondition(viewModel.weatherInfoState.value)
+
                 }
 
                 Box() {
+                    imageSkyBox.value = getWeatherCondition(viewModel.weatherInfoState.value)
                     if (viewModel.dialogState.value == true) {
                         DialogSearch(viewModel, onSubmit = { city ->
                             viewModel.loadWeather(city, this@MainActivity)
                         })
                     }
+                    Log.i("MyLog", "MainActivity: start change image background")
                     Image(
                         painter = painterResource(imageSkyBox.value),
                         contentDescription = "Background blue sky",
