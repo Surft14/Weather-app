@@ -45,7 +45,6 @@ class WeatherRepositoryImpl(
 
     override suspend fun parseWeather(json: String, context: Context): WeatherInfo {
         Log.d("MyLog", "repository parseWeather start")
-        weatherCache.saveWeatherData(json, context)
         return WeatherInfo(
             weatherNow = parseWeatherNow(json),
             listWeatherHour = parseWeatherHour(json),
@@ -56,8 +55,20 @@ class WeatherRepositoryImpl(
     override suspend fun fetchAndParseWeather(city: String, context: Context): WeatherInfo {
         Log.d("MyLog", "repository fetchAndParseWeather start")
         val json = fetchWeatherJSON(city, context)
-        weatherCache.saveWeatherData(json.toString(), context)
-        weatherCache.saveCity(city, context)
+        if (!json.isNullOrEmpty()){ weatherCache.saveWeatherData(json.toString(), context) }
+        val weatherInfo = WeatherInfo()
+        if (json != null) {
+            weatherInfo.weatherNow = parseWeatherNow(json)
+            weatherInfo.listWeatherHour = parseWeatherHour(json)
+            weatherInfo.listWeatherForecast = parseWeatherForecast(json)
+        }
+
+        return weatherInfo
+    }
+
+    override suspend fun searchAndParseWeather(city: String, context: Context): WeatherInfo {
+        Log.d("MyLog", "repository searchAndParseWeather start")
+        val json = fetchWeatherJSON(city, context)
         val weatherInfo = WeatherInfo()
         if (json != null) {
             weatherInfo.weatherNow = parseWeatherNow(json)

@@ -16,6 +16,7 @@ interface WeatherRepository {
     suspend fun parseWeather(json: String, context: Context): WeatherInfo
 
     suspend fun fetchAndParseWeather(city: String, context: Context): WeatherInfo
+    suspend fun searchAndParseWeather(city: String, context: Context) : WeatherInfo
 
     suspend fun clearStaleWeatherData(context: Context)
 

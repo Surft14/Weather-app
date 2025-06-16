@@ -49,7 +49,13 @@ fun DayItem(day: WeatherForecast) {
                     Text(
                         day.text,
                         color = Color.White,
-                        style = TextStyle(fontSize = 20.sp)
+                        style = TextStyle(
+                            fontSize = if (day.text.length > 20) {
+                                10.sp
+                            } else {
+                                20.sp
+                            }
+                        )
                     )
                 }
             }

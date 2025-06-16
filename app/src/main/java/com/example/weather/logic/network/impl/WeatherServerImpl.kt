@@ -2,6 +2,7 @@ package com.example.weather.logic.network.impl
 
 import android.content.Context
 import android.util.Log
+import com.android.volley.DefaultRetryPolicy
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
@@ -37,6 +38,13 @@ class WeatherServerImpl() : WeatherServer {
                 continuation.resume(null)
             }
         )
+
+        val policy = DefaultRetryPolicy(
+            15000, // 10 секунд таймаут
+            DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+            DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+        )
+        stringRequest.setRetryPolicy(policy)
         requestQueue.add(stringRequest)
         Log.i("MyLog", "server fetchWeatherJSON info: $stringRequest")
     }

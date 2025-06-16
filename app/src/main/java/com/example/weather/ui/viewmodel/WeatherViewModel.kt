@@ -40,7 +40,7 @@ class WeatherViewModel(
             try {
                 var weatherInfo: WeatherInfo
                 var json: String? = null
-                //json = weatherRepository.readWeatherData(context)
+                json = weatherRepository.readWeatherData(context)
                 if (json == null) {
                     weatherInfo = weatherRepository.fetchAndParseWeather(city, context)
                 } else {
@@ -59,6 +59,23 @@ class WeatherViewModel(
         }
     }
 
+    fun searchWeather(city: String, context: Context) {
+        Log.d("MyLog", "ViewModel searchWeather start")
+        _isLoadingState.value = true
+        viewModelScope.launch {
+            try {
+                var weatherInfo: WeatherInfo =
+                    weatherRepository.searchAndParseWeather(city, context)
+                _weatherInfoState.value = weatherInfo
+            } catch (e: Exception) {
+                Log.e("MyLog", "Error in search weather data: ${e.message}")
+                _errorState.value = "Error in search weather data  ${e.message}"
+            } finally {
+                _isLoadingState.value = false
+            }
+        }
+    }
+
     fun refreshWeather(context: Context) {
         Log.d("MyLog", "ViewModel refreshWeather start")
         val city = _cityState.value ?: return
@@ -69,7 +86,7 @@ class WeatherViewModel(
                 _weatherInfoState.value = weatherInfo
             } catch (e: Exception) {
                 Log.e("MyLog", "Error refreshing weather: ${e.message}")
-                _errorState.value = "Error refreshing weather"
+                _errorState.value = "Error refreshing weather ${e.message}"
             } finally {
                 _isLoadingState.value = false
             }
@@ -83,22 +100,25 @@ class WeatherViewModel(
             try {
                 val city = weatherRepository.readUserCity(context)
                     ?: geolocationRepository.getCity(context)
-                weatherRepository.saveCity(city.toString(), context)
+
+                if (_cityState.value == city) {
+                    weatherRepository.saveCity(city.toString(), context)
+                }
                 val json = weatherRepository.readWeatherData(context)
                 if (!city.isNullOrEmpty() && json == null) {
                     _cityState.value = city
                     val weatherInfo = weatherRepository.fetchAndParseWeather(city, context)
                     _weatherInfoState.value = weatherInfo
-                }else if (json != null){
+                } else if (json != null) {
                     val weatherInfo = weatherRepository.parseWeather(json, context)
                     _weatherInfoState.value = weatherInfo
-                } else{
+                } else {
                     Log.e("MyLog", "Error load city")
                     _errorState.value = "Couldn't identify the city"
                 }
             } catch (e: Exception) {
                 Log.e("MyLog", "Error load city and weather ${e.message}")
-                _errorState.value = "Error loading city or weather"
+                _errorState.value = "Error loading city or weather ${e.message}"
             } finally {
                 _isLoadingState.value = false
             }
@@ -118,8 +138,8 @@ class WeatherViewModel(
                     weatherRepository.saveCity(city, context)
                 }
             } catch (e: Exception) {
-                Log.e("MyLog", "Error loading city: ${e.message}", e)
-                _errorState.value = "Error loading city"
+                Log.e("MyLog", "Error loading city: ${e.message}")
+                _errorState.value = "Error loading city ${e.message}"
             } finally {
                 _isLoadingState.value = false
             }

@@ -1,7 +1,6 @@
 package com.example.weather.ui.screens.item
 
 import android.util.Log
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,7 +22,7 @@ import com.example.weather.data.model.WeatherHour
 import com.example.weather.ui.theme.BlueLight
 
 @Composable
-fun HourItem (hour: WeatherHour) {
+fun HourItem(hour: WeatherHour) {
     Log.d("MyLog", "HourItem start")
     Card(
         modifier = Modifier
@@ -46,17 +45,22 @@ fun HourItem (hour: WeatherHour) {
                     color = Color.White,
                     style = TextStyle(fontSize = 20.sp)
                 )
-                Row(){
+                Row() {
                     Text(
                         hour.text,
                         color = Color.White,
-                        style = TextStyle(fontSize = 20.sp)
+                        style = TextStyle(
+                            fontSize = if (hour.text.length > 20) {
+                                10.sp
+                            } else {
+                                20.sp
+                            }
+                        )
                     )
                     Text(
-                        text = if (hour.speed.isEmpty()){
+                        text = if (hour.speed.isEmpty()) {
                             ""
-                        }
-                        else{
+                        } else {
                             hour.speed + " kph"
                         },
                         color = Color.White,

@@ -70,26 +70,21 @@ class MainActivity : ComponentActivity() {
                         ) {
                             Log.i("MyLog", "MainActivity: loading city with viewmodel")
                             viewModel.loadCity(this@MainActivity)
+
+                            // Загружаем сразу погоду, если есть интернет
+                            if (isNetWorkAvailable(this@MainActivity)) {
+                                Log.i("MyLog", "MainActivity: loading city and weather data with viewmodel (merged)")
+                                viewModel.loadCityAndWeather(this@MainActivity)
+                            }
                         }
                     }
-                }
-
-                LaunchedEffect(viewModel.cityState.value) {
-                    if (viewModel.weatherInfoState.value == null && isNetWorkAvailable(
-                            this@MainActivity
-                        )
-                    ) {
-                        Log.i("MyLog", "MainActivity: loading city and weather data with viewmodel")
-                        viewModel.loadCityAndWeather(this@MainActivity)
-                    }
-
                 }
 
                 Box() {
                     imageSkyBox.value = getWeatherCondition(viewModel.weatherInfoState.value)
                     if (viewModel.dialogState.value == true) {
                         DialogSearch(viewModel, onSubmit = { city ->
-                            viewModel.loadWeather(city, this@MainActivity)
+                            viewModel.searchWeather(city, this@MainActivity)
                         })
                     }
                     Log.i("MyLog", "MainActivity: start change image background")

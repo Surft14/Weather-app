@@ -51,7 +51,7 @@ class WeatherCacheImpl : WeatherCache {
     }
 
     override suspend fun saveCity(city: String, context: Context) {
-        Log.d("MyLog", "Cache saveCity start")
+        Log.d("MyLog", "Cache saveCity start, ${city}")
         context.dataStore.edit { pref ->
             pref[PreferencesKey.USER_CITY_KEY] = city
         }
@@ -61,7 +61,7 @@ class WeatherCacheImpl : WeatherCache {
         weatherDataJSON: String,
         context: Context,
     ) {
-        Log.d("MyLog", "Cache saveWeatherData start")
+        Log.d("MyLog", "Cache saveWeatherData start, ${weatherDataJSON}")
         val ts = System.currentTimeMillis()
         context.dataStore.edit { preferences ->
             preferences[PreferencesKey.WEATHER_DATA_KEY] = weatherDataJSON
