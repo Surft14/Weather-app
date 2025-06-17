@@ -16,5 +16,6 @@ data class WeatherNow(
 
     var icon: String = "",
     var text: String = "",
+    var back: String = "",
     var code: Int = 0,
 )

@@ -8,22 +8,17 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import com.example.weather.data.model.WeatherNow
 import com.example.weather.logic.repository.geo.impl.GeolocationRepositoryImpl
 import com.example.weather.logic.repository.weather.impl.WeatherRepositoryImpl
+import com.example.weather.ui.screens.BackRound
 import com.example.weather.ui.screens.DialogSearch
 import com.example.weather.ui.screens.MainCard
 import com.example.weather.ui.screens.TabLayout
@@ -55,7 +50,7 @@ class MainActivity : ComponentActivity() {
             WeatherTheme {
                 GeolocationUtils.GetGeolocationPermission()
 
-                val imageSkyBox = remember { mutableStateOf(R.drawable.skybox) }
+                val imageSkyBox = remember { mutableStateOf("skybox") }
                 LaunchedEffect(Unit) {
                     if (viewModel.cityState.value.isNullOrBlank()) {
                         Log.i("MyLog", "MainActivity: City from ViewModel is blank")
@@ -71,9 +66,11 @@ class MainActivity : ComponentActivity() {
                             Log.i("MyLog", "MainActivity: loading city with viewmodel")
                             viewModel.loadCity(this@MainActivity)
 
-                            // Загружаем сразу погоду, если есть интернет
                             if (isNetWorkAvailable(this@MainActivity)) {
-                                Log.i("MyLog", "MainActivity: loading city and weather data with viewmodel (merged)")
+                                Log.i(
+                                    "MyLog",
+                                    "MainActivity: loading city and weather data with viewmodel (merged)"
+                                )
                                 viewModel.loadCityAndWeather(this@MainActivity)
                             }
                         }
@@ -88,14 +85,7 @@ class MainActivity : ComponentActivity() {
                         })
                     }
                     Log.i("MyLog", "MainActivity: start change image background")
-                    Image(
-                        painter = painterResource(imageSkyBox.value),
-                        contentDescription = "Background blue sky",
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .alpha(0.7f),
-                        contentScale = ContentScale.FillBounds,
-                    )
+                    BackRound(imageSkyBox.value)
                     Column {
                         Log.i("MyLog", "MainActivity: start MainCard")
                         MainCard(
