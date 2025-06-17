@@ -2,6 +2,6 @@
 <network-security-config xmlns:tools="http://schemas.android.com/tools">
     <domain-config cleartextTrafficPermitted="true">
         <domain includeSubdomains="true">example.com</domain>
-        <domain tools:ignore="NetworkSecurityConfig">192.168.0.122</domain>
+        <domain tools:ignore="NetworkSecurityConfig">85.234.7.243</domain>
     </domain-config>
 </network-security-config>

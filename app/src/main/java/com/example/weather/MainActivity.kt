@@ -10,11 +10,17 @@ import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import coil.compose.AsyncImage
 import com.example.weather.data.model.WeatherNow
 import com.example.weather.logic.repository.geo.impl.GeolocationRepositoryImpl
 import com.example.weather.logic.repository.weather.impl.WeatherRepositoryImpl
@@ -49,7 +55,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             WeatherTheme {
                 GeolocationUtils.GetGeolocationPermission()
-
+                val weatherInfo = viewModel.weatherInfoState.value
                 val imageSkyBox = remember { mutableStateOf("skybox") }
                 LaunchedEffect(Unit) {
                     if (viewModel.cityState.value.isNullOrBlank()) {
@@ -78,14 +84,20 @@ class MainActivity : ComponentActivity() {
                 }
 
                 Box() {
-                    imageSkyBox.value = getWeatherCondition(viewModel.weatherInfoState.value)
+                    LaunchedEffect(weatherInfo?.weatherNow?.code) {
+                        Log.i("MyLog", "MainActivity: start getWeatherCondition")
+                        weatherInfo?.let {
+                            imageSkyBox.value = getWeatherCondition(it)
+                        }
+                        Log.i("MyLog", "MainActivity: end getWeatherCondition")
+                    }
                     if (viewModel.dialogState.value == true) {
                         DialogSearch(viewModel, onSubmit = { city ->
                             viewModel.searchWeather(city, this@MainActivity)
                         })
                     }
                     Log.i("MyLog", "MainActivity: start change image background")
-                    BackRound(imageSkyBox.value)
+                    BackRound(imageSkyBox, this@MainActivity)
                     Column {
                         Log.i("MyLog", "MainActivity: start MainCard")
                         MainCard(

@@ -5,7 +5,7 @@ import androidx.compose.runtime.Composable
 import com.example.weather.R
 import com.example.weather.data.model.WeatherInfo
 import com.example.weather.data.const.WeatherCodes
-@Composable
+
 fun getWeatherCondition(day: WeatherInfo?): String {
 
     Log.d("MyLog", "getWeatherCondition start")

@@ -75,7 +75,7 @@ fun TabLayout(
             state = pagerState,
             modifier = Modifier.weight(1.0f)
         ) { Index ->
-            Log.i("MyLog", hourList.toString())
+            Log.i("MyLog", "TabLayout ${hourList}")
             val currentList = when (Index) {
                 0 -> LazyColumn(modifier = Modifier.fillMaxSize()) {
                     items(hourList) { HourItem(it) }
