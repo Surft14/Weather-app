@@ -3,6 +3,7 @@ package com.example.weather.logic.network.interfaces
 import android.content.Context
 import com.example.weather.data.model.WeatherForecast
 import com.example.weather.data.model.WeatherHour
+import com.example.weather.data.model.WeatherInfo
 import com.example.weather.data.model.WeatherNow
 
 interface WeatherServer {
@@ -16,4 +17,6 @@ interface WeatherServer {
     suspend fun parseWeatherNow(json: String): WeatherNow
 
     suspend fun parseWeatherForecast(json: String): List<WeatherForecast>
+
+    suspend fun getWeatherCondition(day: WeatherInfo?): String
 }

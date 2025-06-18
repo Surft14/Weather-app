@@ -2,6 +2,7 @@ package com.example.weather.logic.repository.weather.impl
 
 import android.content.Context
 import android.util.Log
+import com.example.weather.data.const.WeatherCodes
 import com.example.weather.data.model.WeatherForecast
 import com.example.weather.data.model.WeatherHour
 import com.example.weather.data.model.WeatherInfo
@@ -107,5 +108,11 @@ class WeatherRepositoryImpl(
         return weatherCache.saveWeatherData(weatherDataJSON, context)
     }
 
+    override suspend fun getWeatherCondition(day: WeatherInfo?): String {
+        Log.d("MyLog", "repository getWeatherCondition start")
+        Log.i("MyLog", "repository getWeatherCondition info: $day")
+
+        return weatherServer.getWeatherCondition(day)
+    }
 
 }

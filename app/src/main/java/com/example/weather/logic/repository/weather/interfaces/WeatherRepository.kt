@@ -25,4 +25,6 @@ interface WeatherRepository {
 
     suspend fun saveCity(city: String, context: Context)
     suspend fun saveWeatherData(weatherDataJSON: String, context: Context)
+
+    suspend fun getWeatherCondition(day: WeatherInfo?): String
 }

@@ -10,6 +10,7 @@ object Const{
 object PreferencesKey{
     val WEATHER_DATA_KEY = stringPreferencesKey("weatherData")
     val USER_CITY_KEY = stringPreferencesKey("userCity")
+    val IMAGE_BACK_ROUND = stringPreferencesKey("imageBackRound")
     val TIME_MS_KEY = longPreferencesKey("timeMsKey")
 }
 

@@ -2,11 +2,8 @@ package com.example.weather.ui.viewmodel
 
 import android.content.Context
 import android.util.Log
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.weather.data.model.WeatherInfo
@@ -33,6 +30,9 @@ class WeatherViewModel(
     private val _errorState = mutableStateOf<String?>("")
     val errorState: State<String?> = _errorState
 
+    private val _imageBackState = mutableStateOf("skybox")
+    val imageBackState: State<String> = _imageBackState
+
     fun loadWeather(city: String, context: Context) {
         Log.d("MyLog", "ViewModel loadWeather start")
         _isLoadingState.value = true
@@ -47,6 +47,7 @@ class WeatherViewModel(
                     weatherInfo = weatherRepository.parseWeather(json, context)
                 }
                 _weatherInfoState.value = weatherInfo
+                loadCodeImageBack(weatherInfo)
                 if (_cityState.value != city) {
                     _cityState.value = city
                 }
@@ -67,6 +68,7 @@ class WeatherViewModel(
                 var weatherInfo: WeatherInfo =
                     weatherRepository.searchAndParseWeather(city, context)
                 _weatherInfoState.value = weatherInfo
+                loadCodeImageBack(weatherInfo)
             } catch (e: Exception) {
                 Log.e("MyLog", "Error in search weather data: ${e.message}")
                 _errorState.value = "Error in search weather data  ${e.message}"
@@ -84,6 +86,7 @@ class WeatherViewModel(
             try {
                 val weatherInfo = weatherRepository.fetchAndParseWeather(city, context)
                 _weatherInfoState.value = weatherInfo
+                loadCodeImageBack(weatherInfo)
             } catch (e: Exception) {
                 Log.e("MyLog", "Error refreshing weather: ${e.message}")
                 _errorState.value = "Error refreshing weather ${e.message}"
@@ -109,9 +112,11 @@ class WeatherViewModel(
                     _cityState.value = city
                     val weatherInfo = weatherRepository.fetchAndParseWeather(city, context)
                     _weatherInfoState.value = weatherInfo
+                    loadCodeImageBack(weatherInfo)
                 } else if (json != null) {
                     val weatherInfo = weatherRepository.parseWeather(json, context)
                     _weatherInfoState.value = weatherInfo
+                    loadCodeImageBack(weatherInfo)
                 } else {
                     Log.e("MyLog", "Error load city")
                     _errorState.value = "Couldn't identify the city"
@@ -144,6 +149,22 @@ class WeatherViewModel(
                 _isLoadingState.value = false
             }
         }
+    }
+
+    fun loadCodeImageBack(day: WeatherInfo){
+        Log.d("MyLog", "ViewModel loadImageBack start")
+        _isLoadingState.value = true
+        viewModelScope.launch {
+            try {
+                _imageBackState.value = weatherRepository.getWeatherCondition(day)
+            } catch (e: Exception) {
+                Log.e("MyLog", "Error loadImageBack: ${e.message}")
+                _errorState.value = "Error loadImageBack ${e.message}"
+            } finally {
+                _isLoadingState.value = false
+            }
+        }
+
     }
 
     fun clearError() {

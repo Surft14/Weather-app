@@ -5,7 +5,6 @@ import android.util.Log
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.ContentScale
@@ -16,13 +15,13 @@ import com.example.weather.R
 import com.example.weather.logic.network.provideUnsafeImageLoader
 
 @Composable
-fun BackRound(imageSkyBox: MutableState<String>, context: Context) {
-    Log.d("MyLog", "BackRound start with value: ${imageSkyBox.value}")
+fun BackRound(imageSkyBox: String, context: Context) {
+    Log.d("MyLog", "BackRound start with value: ${imageSkyBox}")
     CompositionLocalProvider(
         LocalImageLoader provides provideUnsafeImageLoader(context)
     ) {
         AsyncImage(
-            model = "https://85.234.7.243:8443/img/v1/weatherimg/${imageSkyBox.value}.png",
+            model = "https://85.234.7.243:8443/img/v1/weatherimg/${imageSkyBox}.png",
             contentDescription = "Background",
             modifier = Modifier
                 .fillMaxSize()
@@ -32,6 +31,6 @@ fun BackRound(imageSkyBox: MutableState<String>, context: Context) {
             placeholder = painterResource(R.drawable.skybox),
         )
     }
-    Log.d("MyLog", "BackRound end with value: ${imageSkyBox.value}")
+    Log.d("MyLog", "BackRound end with value: ${imageSkyBox}")
 
 }
