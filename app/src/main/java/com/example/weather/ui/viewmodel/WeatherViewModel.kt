@@ -157,7 +157,7 @@ class WeatherViewModel(
         }
     }
 
-    fun loadCodeImage(day: WeatherInfo){
+    fun loadCodeImage(day: WeatherInfo) {
         Log.d("MyLog", "ViewModel loadCodeImage start")
         _isLoadingState.value = true
         viewModelScope.launch {
@@ -173,22 +173,40 @@ class WeatherViewModel(
 
     }
 
-    fun loadImage(imageUrl: String, context: Context){
+    fun loadImage(imageUrl: String, context: Context) {
         Log.d("MyLog", "ViewModel loadImage start")
+        Log.i("MyLog", "ViewModel loadImage info: $imageUrl")
         _isLoadingState.value = true
         viewModelScope.launch {
             try {
                 var imageBase64 = weatherRepository.readBase64(context)
-                if (imageBase64.isNullOrEmpty()){
+                if (imageBase64.isNullOrEmpty()) {
                     _bitmapState.value = imageRepository.downloadImage(imageUrl, context)
-                    imageBase64 = imageRepository.bitmapToBase64(bitmapState.value)
+                    imageBase64 = imageRepository.bitmapToBase64(_bitmapState.value)
                     weatherRepository.saveBase64(imageBase64, context)
-                } else{
+                } else {
                     _bitmapState.value = imageRepository.base64ToBitmap(imageBase64)
                 }
-            }catch (e: Exception){
+            } catch (e: Exception) {
                 Log.e("MyLog", "error image: ${e.message}")
-            }finally {
+            } finally {
+                _isLoadingState.value = false
+            }
+        }
+    }
+
+    fun loadWeatherFromCache(context: Context) {
+        Log.d("MyLog", "ViewModel loadWeatherFromCache start")
+        _isLoadingState.value = true
+        viewModelScope.launch {
+            try {
+                val json = weatherRepository.readWeatherData(context)
+                if (json != null){
+                    val weatherInfo = weatherRepository.parseWeather(json, context)
+                }
+            } catch (e: Exception) {
+                Log.e("MyLog", "error weather cache: ${e.message}")
+            } finally {
                 _isLoadingState.value = false
             }
         }
