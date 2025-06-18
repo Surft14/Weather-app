@@ -81,7 +81,9 @@ class MainActivity : ComponentActivity() {
                         })
                     }
                     Log.i("MyLog", "MainActivity: start change image background")
-                    BackRound(viewModel.imageBackState.value, this@MainActivity)
+                    val url = "https://85.234.7.243:8443/img/v1/weatherimg/${viewModel.imageBackState}.png\""
+                    viewModel.loadImage(url, this@MainActivity)
+                    BackRound(viewModel.bitmapState.value)
                     Column {
                         Log.i("MyLog", "MainActivity: start MainCard")
                         MainCard(

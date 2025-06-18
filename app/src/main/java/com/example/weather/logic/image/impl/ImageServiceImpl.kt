@@ -1,6 +1,5 @@
 package com.example.weather.logic.image.impl
 
-import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Base64
@@ -10,10 +9,10 @@ import java.io.ByteArrayOutputStream
 import java.net.URL
 
 class ImageServiceImpl: ImageService {
-    override suspend fun bitmapToBase64(bitmap: Bitmap): String {
+    override suspend fun bitmapToBase64(bitmap: Bitmap?): String {
         Log.d("MyLog", "Service image bitmapToBase64 start")
         val stream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
+        bitmap?.compress(Bitmap.CompressFormat.PNG, 100, stream)
         val byteArray = stream.toByteArray()
         return Base64.encodeToString(byteArray, Base64.DEFAULT)
     }
@@ -32,7 +31,7 @@ class ImageServiceImpl: ImageService {
             val bitmap = BitmapFactory.decodeStream(inputStream)
             bitmap
         } catch (e : Exception){
-            e.printStackTrace()
+            Log.d("MyLog", "Service image downloadImage error: ${e.message}")
             null
         }
     }

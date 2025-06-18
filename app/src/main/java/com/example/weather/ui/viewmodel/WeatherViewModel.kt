@@ -53,7 +53,7 @@ class WeatherViewModel(
                     weatherInfo = weatherRepository.parseWeather(json, context)
                 }
                 _weatherInfoState.value = weatherInfo
-                loadCodeImageBack(weatherInfo)
+                loadCodeImage(weatherInfo)
                 if (_cityState.value != city) {
                     _cityState.value = city
                 }
@@ -74,7 +74,7 @@ class WeatherViewModel(
                 var weatherInfo: WeatherInfo =
                     weatherRepository.searchAndParseWeather(city, context)
                 _weatherInfoState.value = weatherInfo
-                loadCodeImageBack(weatherInfo)
+                loadCodeImage(weatherInfo)
             } catch (e: Exception) {
                 Log.e("MyLog", "Error in search weather data: ${e.message}")
                 _errorState.value = "Error in search weather data  ${e.message}"
@@ -92,7 +92,7 @@ class WeatherViewModel(
             try {
                 val weatherInfo = weatherRepository.fetchAndParseWeather(city, context)
                 _weatherInfoState.value = weatherInfo
-                loadCodeImageBack(weatherInfo)
+                loadCodeImage(weatherInfo)
             } catch (e: Exception) {
                 Log.e("MyLog", "Error refreshing weather: ${e.message}")
                 _errorState.value = "Error refreshing weather ${e.message}"
@@ -118,11 +118,11 @@ class WeatherViewModel(
                     _cityState.value = city
                     val weatherInfo = weatherRepository.fetchAndParseWeather(city, context)
                     _weatherInfoState.value = weatherInfo
-                    loadCodeImageBack(weatherInfo)
+                    loadCodeImage(weatherInfo)
                 } else if (json != null) {
                     val weatherInfo = weatherRepository.parseWeather(json, context)
                     _weatherInfoState.value = weatherInfo
-                    loadCodeImageBack(weatherInfo)
+                    loadCodeImage(weatherInfo)
                 } else {
                     Log.e("MyLog", "Error load city")
                     _errorState.value = "Couldn't identify the city"
@@ -157,8 +157,8 @@ class WeatherViewModel(
         }
     }
 
-    fun loadCodeImageBack(day: WeatherInfo){
-        Log.d("MyLog", "ViewModel loadImageBack start")
+    fun loadCodeImage(day: WeatherInfo){
+        Log.d("MyLog", "ViewModel loadCodeImage start")
         _isLoadingState.value = true
         viewModelScope.launch {
             try {
@@ -171,6 +171,27 @@ class WeatherViewModel(
             }
         }
 
+    }
+
+    fun loadImage(imageUrl: String, context: Context){
+        Log.d("MyLog", "ViewModel loadImage start")
+        _isLoadingState.value = true
+        viewModelScope.launch {
+            try {
+                var imageBase64 = weatherRepository.readBase64(context)
+                if (imageBase64.isNullOrEmpty()){
+                    _bitmapState.value = imageRepository.downloadImage(imageUrl)
+                    imageBase64 = imageRepository.bitmapToBase64(bitmapState.value)
+                    weatherRepository.saveBase64(imageBase64, context)
+                } else{
+                    _bitmapState.value = imageRepository.base64ToBitmap(imageBase64)
+                }
+            }catch (e: Exception){
+
+            }finally {
+                _isLoadingState.value = false
+            }
+        }
     }
 
     fun clearError() {
