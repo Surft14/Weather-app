@@ -75,7 +75,6 @@ class MainActivity : ComponentActivity() {
                 }
 
                 Box {
-                    viewModel.loadWeatherFromCache(this@MainActivity)
                     if (viewModel.dialogState.value == true) {
                         DialogSearch(viewModel, onSubmit = { city ->
                             viewModel.searchWeather(city, this@MainActivity)

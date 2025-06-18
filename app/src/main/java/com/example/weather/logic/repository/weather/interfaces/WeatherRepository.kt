@@ -13,7 +13,7 @@ interface WeatherRepository {
     suspend fun parseWeatherNow(json: String): WeatherNow
     suspend fun parseWeatherHour(json: String): List<WeatherHour>
     suspend fun parseWeatherForecast(json: String): List<WeatherForecast>
-    suspend fun parseWeather(json: String, context: Context): WeatherInfo
+    suspend fun parseWeather(json: String): WeatherInfo
 
     suspend fun fetchAndParseWeather(city: String, context: Context): WeatherInfo
     suspend fun searchAndParseWeather(city: String, context: Context) : WeatherInfo

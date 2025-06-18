@@ -8,6 +8,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.weather.data.model.WeatherInfo
+import com.example.weather.logic.cache.CachedWeather
 import com.example.weather.logic.repository.geo.interfaces.GeolocationRepository
 import com.example.weather.logic.repository.img.interfaces.ImageRepository
 import com.example.weather.logic.repository.weather.interfaces.WeatherRepository
@@ -39,6 +40,10 @@ class WeatherViewModel(
     private val _bitmapState = mutableStateOf<Bitmap?>(null)
     val bitmapState: State<Bitmap?> = _bitmapState
 
+    init {
+        loadFromCache()
+    }
+
     fun loadWeather(city: String, context: Context) {
         Log.d("MyLog", "ViewModel loadWeather start")
         _isLoadingState.value = true
@@ -50,7 +55,7 @@ class WeatherViewModel(
                 if (json == null) {
                     weatherInfo = weatherRepository.fetchAndParseWeather(city, context)
                 } else {
-                    weatherInfo = weatherRepository.parseWeather(json, context)
+                    weatherInfo = weatherRepository.parseWeather(json)
                 }
                 _weatherInfoState.value = weatherInfo
                 loadCodeImage(weatherInfo)
@@ -120,7 +125,7 @@ class WeatherViewModel(
                     _weatherInfoState.value = weatherInfo
                     loadCodeImage(weatherInfo)
                 } else if (json != null) {
-                    val weatherInfo = weatherRepository.parseWeather(json, context)
+                    val weatherInfo = weatherRepository.parseWeather(json)
                     _weatherInfoState.value = weatherInfo
                     loadCodeImage(weatherInfo)
                 } else {
@@ -195,15 +200,17 @@ class WeatherViewModel(
         }
     }
 
-    fun loadWeatherFromCache(context: Context) {
-        Log.d("MyLog", "ViewModel loadWeatherFromCache start")
+    fun loadFromCache() {
+        Log.d("MyLog", "ViewModel loadFromCache start")
         _isLoadingState.value = true
         viewModelScope.launch {
             try {
-                val json = weatherRepository.readWeatherData(context)
+                val json = CachedWeather.weatherJSON
                 if (json != null){
-                    val weatherInfo = weatherRepository.parseWeather(json, context)
+                    _weatherInfoState.value = weatherRepository.parseWeather(json)
                 }
+                _cityState.value = CachedWeather.cityName ?: ""
+                _bitmapState.value = imageRepository.base64ToBitmap(CachedWeather.imageBase64)
             } catch (e: Exception) {
                 Log.e("MyLog", "error weather cache: ${e.message}")
             } finally {

@@ -44,7 +44,7 @@ class WeatherRepositoryImpl(
         return weatherServer.parseWeatherForecast(json)
     }
 
-    override suspend fun parseWeather(json: String, context: Context): WeatherInfo {
+    override suspend fun parseWeather(json: String): WeatherInfo {
         Log.d("MyLog", "repository parseWeather start")
         return WeatherInfo(
             weatherNow = parseWeatherNow(json),

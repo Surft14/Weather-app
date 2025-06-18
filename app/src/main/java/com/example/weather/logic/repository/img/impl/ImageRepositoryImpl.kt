@@ -15,7 +15,7 @@ class ImageRepositoryImpl(
         return imageService.bitmapToBase64(bitmap)
     }
 
-    override suspend fun base64ToBitmap(encodedString: String): Bitmap {
+    override suspend fun base64ToBitmap(encodedString: String?): Bitmap? {
         Log.d("MyLog", "Repository image base64ToBitmap start")
         return imageService.base64ToBitmap(encodedString)
     }

@@ -7,15 +7,10 @@ import android.util.Base64
 import android.util.Log
 import android.widget.ImageView
 import com.android.volley.toolbox.ImageRequest
-import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.weather.logic.image.interfaces.ImageService
 import com.example.weather.logic.network.CustomHurlStack
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import okhttp3.Request
 import java.io.ByteArrayOutputStream
-import java.net.URL
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -28,10 +23,14 @@ class ImageServiceImpl : ImageService {
         return Base64.encodeToString(byteArray, Base64.DEFAULT)
     }
 
-    override suspend fun base64ToBitmap(encodedString: String): Bitmap {
+    override suspend fun base64ToBitmap(encodedString: String?): Bitmap? {
         Log.d("MyLog", "Service image base64ToBitmap start")
-        val bytes = Base64.decode(encodedString, Base64.DEFAULT)
-        return BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+        if (encodedString.isNullOrEmpty()){
+            val bytes = Base64.decode(encodedString, Base64.DEFAULT)
+            return BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+        }else{
+            return null
+        }
     }
 
     override suspend fun downloadImage(imageUrl: String, context: Context): Bitmap? = suspendCoroutine{ continuation ->
