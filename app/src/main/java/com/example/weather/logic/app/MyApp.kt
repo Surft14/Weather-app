@@ -10,16 +10,14 @@ import com.example.weather.data.const.Const.WEATHER_TTL_MS
 import com.example.weather.data.const.PreferencesKey
 import com.example.weather.data.dataStore
 import com.example.weather.logic.cache.CachedWeather
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.io.ByteArrayOutputStream
 
 class MyApp: Application() {
     override fun onCreate() {
         super.onCreate()
-        CoroutineScope(Dispatchers.IO).launch {
+        runBlocking {
             preloadCachedData()
         }
     }
