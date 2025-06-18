@@ -180,14 +180,14 @@ class WeatherViewModel(
             try {
                 var imageBase64 = weatherRepository.readBase64(context)
                 if (imageBase64.isNullOrEmpty()){
-                    _bitmapState.value = imageRepository.downloadImage(imageUrl)
+                    _bitmapState.value = imageRepository.downloadImage(imageUrl, context)
                     imageBase64 = imageRepository.bitmapToBase64(bitmapState.value)
                     weatherRepository.saveBase64(imageBase64, context)
                 } else{
                     _bitmapState.value = imageRepository.base64ToBitmap(imageBase64)
                 }
             }catch (e: Exception){
-
+                Log.e("MyLog", "error image: ${e.message}")
             }finally {
                 _isLoadingState.value = false
             }

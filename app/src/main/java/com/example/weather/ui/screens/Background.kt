@@ -13,7 +13,7 @@ import androidx.compose.ui.res.painterResource
 import com.example.weather.R
 
 @Composable
-fun BackRound(image: Bitmap?) {
+fun Background(image: Bitmap?) {
     Log.d("MyLog", "BackRound start with value")
     if (image != null){
         Image(

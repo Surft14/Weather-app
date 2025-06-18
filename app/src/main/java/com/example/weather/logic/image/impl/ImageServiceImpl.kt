@@ -1,14 +1,25 @@
 package com.example.weather.logic.image.impl
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Base64
 import android.util.Log
+import android.widget.ImageView
+import com.android.volley.toolbox.ImageRequest
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
 import com.example.weather.logic.image.interfaces.ImageService
+import com.example.weather.logic.network.CustomHurlStack
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import okhttp3.Request
 import java.io.ByteArrayOutputStream
 import java.net.URL
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
-class ImageServiceImpl: ImageService {
+class ImageServiceImpl : ImageService {
     override suspend fun bitmapToBase64(bitmap: Bitmap?): String {
         Log.d("MyLog", "Service image bitmapToBase64 start")
         val stream = ByteArrayOutputStream()
@@ -23,17 +34,21 @@ class ImageServiceImpl: ImageService {
         return BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
     }
 
-    override suspend fun downloadImage(imageUrl: String): Bitmap? {
+    override suspend fun downloadImage(imageUrl: String, context: Context): Bitmap? = suspendCoroutine{ continuation ->
         Log.d("MyLog", "Service image downloadImage start")
-        return try {
-            val url = URL(imageUrl)
-            val inputStream = url.openStream()
-            val bitmap = BitmapFactory.decodeStream(inputStream)
-            bitmap
-        } catch (e : Exception){
-            Log.d("MyLog", "Service image downloadImage error: ${e.message}")
-            null
-        }
+        val requestQueue = Volley.newRequestQueue(context, CustomHurlStack(context))
+
+        val imageRequest =  ImageRequest(
+            imageUrl,
+            { bitmap -> continuation.resume(bitmap) },
+            0, 0, ImageView.ScaleType.CENTER_CROP, Bitmap.Config.RGB_565,
+            { error ->
+                Log.e("MyLog", "Volley error: ${error.message}")
+                continuation.resume(null)
+            }
+        )
+
+        requestQueue.add(imageRequest)
     }
 
 }

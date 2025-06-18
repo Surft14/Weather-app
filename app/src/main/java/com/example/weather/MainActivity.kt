@@ -17,7 +17,7 @@ import com.example.weather.data.model.WeatherNow
 import com.example.weather.logic.repository.geo.impl.GeolocationRepositoryImpl
 import com.example.weather.logic.repository.img.impl.ImageRepositoryImpl
 import com.example.weather.logic.repository.weather.impl.WeatherRepositoryImpl
-import com.example.weather.ui.screens.BackRound
+import com.example.weather.ui.screens.Background
 import com.example.weather.ui.screens.DialogSearch
 import com.example.weather.ui.screens.MainCard
 import com.example.weather.ui.screens.TabLayout
@@ -74,16 +74,21 @@ class MainActivity : ComponentActivity() {
                     }
                 }
 
-                Box() {
+                Box {
                     if (viewModel.dialogState.value == true) {
                         DialogSearch(viewModel, onSubmit = { city ->
                             viewModel.searchWeather(city, this@MainActivity)
                         })
                     }
                     Log.i("MyLog", "MainActivity: start change image background")
-                    val url = "https://85.234.7.243:8443/img/v1/weatherimg/${viewModel.imageBackState}.png\""
-                    viewModel.loadImage(url, this@MainActivity)
-                    BackRound(viewModel.bitmapState.value)
+                    LaunchedEffect(viewModel.imageBackState.value){
+                        Log.i("MyLog", "MainActivity: info of background ${viewModel.imageBackState.value}")
+                        val url =
+                            "https://85.234.7.243:8443/img/v1/weatherimg/${viewModel.imageBackState.value}.png"
+                        Log.i("MyLog", "MainActivity: info $url")
+                        viewModel.loadImage(url, this@MainActivity)
+                    }
+                    Background(viewModel.bitmapState.value)
                     Column {
                         Log.i("MyLog", "MainActivity: start MainCard")
                         MainCard(

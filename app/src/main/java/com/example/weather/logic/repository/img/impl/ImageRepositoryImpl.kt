@@ -1,5 +1,6 @@
 package com.example.weather.logic.repository.img.impl
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.util.Log
 import com.example.weather.logic.image.impl.ImageServiceImpl
@@ -19,8 +20,8 @@ class ImageRepositoryImpl(
         return imageService.base64ToBitmap(encodedString)
     }
 
-    override suspend fun downloadImage(imageUrl: String): Bitmap? {
+    override suspend fun downloadImage(imageUrl: String, context: Context): Bitmap? {
         Log.d("MyLog", "Repository image downloadImage start")
-        return imageService.downloadImage(imageUrl)
+        return imageService.downloadImage(imageUrl, context)
     }
 }
