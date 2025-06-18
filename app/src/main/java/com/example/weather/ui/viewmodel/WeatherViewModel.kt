@@ -1,6 +1,7 @@
 package com.example.weather.ui.viewmodel
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -8,12 +9,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.weather.data.model.WeatherInfo
 import com.example.weather.logic.repository.geo.interfaces.GeolocationRepository
+import com.example.weather.logic.repository.img.interfaces.ImageRepository
 import com.example.weather.logic.repository.weather.interfaces.WeatherRepository
 import kotlinx.coroutines.launch
 
 class WeatherViewModel(
     private val weatherRepository: WeatherRepository,
     private val geolocationRepository: GeolocationRepository,
+    private val imageRepository: ImageRepository,
 ) : ViewModel() {
     private val _weatherInfoState = mutableStateOf<WeatherInfo?>(null)
     val weatherInfoState: State<WeatherInfo?> = _weatherInfoState
@@ -32,6 +35,9 @@ class WeatherViewModel(
 
     private val _imageBackState = mutableStateOf("skybox")
     val imageBackState: State<String> = _imageBackState
+
+    private val _bitmapState = mutableStateOf<Bitmap?>(null)
+    val bitmapState: State<Bitmap?> = _bitmapState
 
     fun loadWeather(city: String, context: Context) {
         Log.d("MyLog", "ViewModel loadWeather start")

@@ -84,28 +84,33 @@ class WeatherRepositoryImpl(
         Log.d("MyLog", "repository clearStaleWeatherData start")
         weatherCache.clearStaleWeatherData(context)
     }
-
     override suspend fun readWeatherData(context: Context): String? {
         Log.d("MyLog", "repository readWeatherData start")
         return weatherCache.readWeatherData(context)
     }
-
     override suspend fun readUserCity(context: Context): String? {
         Log.d("MyLog", "repository readUserCity start")
         return weatherCache.readUserCity(context)
+    }
+    override suspend fun readBase64(context: Context): String? {
+        Log.d("MyLog", "repository readBase64 start")
+        return weatherCache.readBase64(context)
     }
 
     override suspend fun saveCity(city: String, context: Context) {
         Log.d("MyLog", "repository saveCity start")
         return weatherCache.saveCity(city, context)
     }
-
     override suspend fun saveWeatherData(
         weatherDataJSON: String,
         context: Context,
     ) {
         Log.d("MyLog", "repository saveWeatherData start")
         return weatherCache.saveWeatherData(weatherDataJSON, context)
+    }
+    override suspend fun saveBase64(image: String, context: Context) {
+        Log.d("MyLog", "repository saveBase64 start")
+        weatherCache.saveBase64(image, context)
     }
 
     override suspend fun getWeatherCondition(day: WeatherInfo?): String {

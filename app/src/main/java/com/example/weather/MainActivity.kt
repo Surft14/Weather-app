@@ -11,12 +11,11 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import com.example.weather.data.model.WeatherNow
 import com.example.weather.logic.repository.geo.impl.GeolocationRepositoryImpl
+import com.example.weather.logic.repository.img.impl.ImageRepositoryImpl
 import com.example.weather.logic.repository.weather.impl.WeatherRepositoryImpl
 import com.example.weather.ui.screens.BackRound
 import com.example.weather.ui.screens.DialogSearch
@@ -38,8 +37,9 @@ class MainActivity : ComponentActivity() {
 
         val weatherRepo = WeatherRepositoryImpl()
         val geoRepo = GeolocationRepositoryImpl()
+        val imgRepo = ImageRepositoryImpl()
 
-        val factory = WeatherViewModelFactory(weatherRepo, geoRepo)
+        val factory = WeatherViewModelFactory(weatherRepo, geoRepo, imgRepo)
 
         viewModel = ViewModelProvider(this, factory)[WeatherViewModel::class.java]
 
@@ -48,8 +48,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             WeatherTheme {
                 GeolocationUtils.GetGeolocationPermission()
-                val weatherInfo = viewModel.weatherInfoState.value
-                val imageSkyBox = remember { mutableStateOf("skybox") }
                 LaunchedEffect(Unit) {
                     if (viewModel.cityState.value.isNullOrBlank()) {
                         Log.i("MyLog", "MainActivity: City from ViewModel is blank")

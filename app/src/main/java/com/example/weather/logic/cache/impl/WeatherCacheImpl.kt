@@ -1,6 +1,7 @@
 package com.example.weather.logic.cache.impl
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.util.Log
 import androidx.datastore.preferences.core.edit
 import com.example.weather.data.const.Const.WEATHER_TTL_MS
@@ -36,7 +37,6 @@ class WeatherCacheImpl : WeatherCache {
             null
         }
     }
-
     override suspend fun readUserCity(context: Context): String? {
         Log.d("MyLog", "Cache readUserCity start")
         val preferences = context.dataStore.data.first()
@@ -50,13 +50,25 @@ class WeatherCacheImpl : WeatherCache {
         }
     }
 
+    override suspend fun readBase64(context: Context): String? {
+        Log.d("MyLog", "Cache readBase64 start")
+        val preferences = context.dataStore.data.first()
+        val imageBase64 = preferences[PreferencesKey.IMAGE_BACK_ROUND]
+        val ts = preferences[PreferencesKey.TIME_MS_KEY] ?: 0L
+        return if (System.currentTimeMillis() - ts <= WEATHER_TTL_MS) {
+            imageBase64
+        } else {
+            Log.i("MyLog", "clear data")
+            clearStaleWeatherData(context)
+            null
+        }
+    }
     override suspend fun saveCity(city: String, context: Context) {
         Log.d("MyLog", "Cache saveCity start, ${city}")
         context.dataStore.edit { pref ->
             pref[PreferencesKey.USER_CITY_KEY] = city
         }
     }
-
     override suspend fun saveWeatherData(
         weatherDataJSON: String,
         context: Context,
@@ -67,5 +79,14 @@ class WeatherCacheImpl : WeatherCache {
             preferences[PreferencesKey.WEATHER_DATA_KEY] = weatherDataJSON
             preferences[PreferencesKey.TIME_MS_KEY] = ts
         }
+    }
+    override suspend fun saveBase64(image: String, context: Context) {
+        Log.d("MyLog", "Cache saveBase64 start")
+        val ts = System.currentTimeMillis()
+        context.dataStore.edit { preferences ->
+            preferences[PreferencesKey.IMAGE_BACK_ROUND] = image
+            preferences[PreferencesKey.TIME_MS_KEY] = ts
+        }
+
     }
 }
