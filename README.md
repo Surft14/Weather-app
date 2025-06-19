@@ -66,14 +66,12 @@
 |    |    ├── isNetworlAvailable.kt
 |    ├── MainACtivity
 |    ├── MyApp
-|    |
 |    ├── res
 |    |    ├── drawable
 |    |    ├── mipmap
 |    |    ├── raw
 |    |    ├── values
 |    |    ├── xml    
-|
 ├── build.gradle
 
 ```
