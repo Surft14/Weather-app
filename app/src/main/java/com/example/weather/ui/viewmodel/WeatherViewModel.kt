@@ -206,7 +206,7 @@ class WeatherViewModel(
         viewModelScope.launch {
             try {
                 val json = CachedWeather.weatherJSON
-                if (json != null){
+                if (!json.isNullOrEmpty()) {
                     _weatherInfoState.value = weatherRepository.parseWeather(json)
                 }
                 _cityState.value = CachedWeather.cityName ?: ""

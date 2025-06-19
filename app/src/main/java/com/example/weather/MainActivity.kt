@@ -44,12 +44,11 @@ class MainActivity : ComponentActivity() {
         viewModel = ViewModelProvider(this, factory)[WeatherViewModel::class.java]
 
 
-
         setContent {
             WeatherTheme {
                 GeolocationUtils.GetGeolocationPermission()
                 LaunchedEffect(Unit) {
-                    if (viewModel.cityState.value.isNullOrBlank()) {
+                    if (viewModel.cityState.value.isNullOrEmpty()) {
                         Log.i("MyLog", "MainActivity: City from ViewModel is blank")
                         if (ContextCompat.checkSelfPermission(
                                 this@MainActivity,
@@ -70,6 +69,14 @@ class MainActivity : ComponentActivity() {
                                 )
                                 viewModel.loadCityAndWeather(this@MainActivity)
                             }
+                        }
+                    } else{
+                        if (isNetWorkAvailable(this@MainActivity)) {
+                            Log.i(
+                                "MyLog",
+                                "MainActivity: loading weather data with viewmodel (merged)"
+                            )
+                            viewModel.loadWeather(viewModel.cityState.value, this@MainActivity)
                         }
                     }
                 }

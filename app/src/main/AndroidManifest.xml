@@ -12,7 +12,7 @@
     <!-- Для Android 13+ (API 33) -->
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <application
-        android:name=".logic.app.MyApp"
+        android:name=".MyApp"
         android:networkSecurityConfig="@xml/network_security_config"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
