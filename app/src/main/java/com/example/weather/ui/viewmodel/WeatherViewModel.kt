@@ -5,13 +5,17 @@ import android.graphics.Bitmap
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.res.imageResource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.weather.R
 import com.example.weather.data.model.WeatherInfo
 import com.example.weather.logic.cache.CachedWeather
 import com.example.weather.logic.repository.geo.interfaces.GeolocationRepository
 import com.example.weather.logic.repository.img.interfaces.ImageRepository
 import com.example.weather.logic.repository.weather.interfaces.WeatherRepository
+import com.example.weather.utils.sha256
 import kotlinx.coroutines.launch
 
 class WeatherViewModel(
@@ -34,7 +38,7 @@ class WeatherViewModel(
     private val _errorState = mutableStateOf<String?>("")
     val errorState: State<String?> = _errorState
 
-    private val _imageBackState = mutableStateOf("skybox")
+    private val _imageBackState = mutableStateOf("")
     val imageBackState: State<String> = _imageBackState
 
     private val _bitmapState = mutableStateOf<Bitmap?>(null)
@@ -179,21 +183,30 @@ class WeatherViewModel(
     }
 
     fun loadImage(imageUrl: String, context: Context) {
-        Log.d("MyLog", "ViewModel loadImage start")
-        Log.i("MyLog", "ViewModel loadImage info: $imageUrl")
-        _isLoadingState.value = true
         viewModelScope.launch {
+            _isLoadingState.value = true
             try {
-                var imageBase64 = weatherRepository.readBase64(context)
-                if (imageBase64.isNullOrEmpty()) {
-                    _bitmapState.value = imageRepository.downloadImage(imageUrl, context)
-                    imageBase64 = imageRepository.bitmapToBase64(_bitmapState.value)
-                    weatherRepository.saveBase64(imageBase64, context)
+                val currentBase64 = CachedWeather.imageBase64
+                val currentHash = currentBase64?.sha256()
+
+                val isSkybox = currentHash == CachedWeather.skyboxHash
+
+                if (currentBase64.isNullOrEmpty() || isSkybox) {
+                    Log.i("MyLog", "Null or Empty or isSkyBox")
+                    val bitmap = imageRepository.downloadImage(imageUrl, context)
+                    _bitmapState.value = bitmap
+
+                    val newBase64 = imageRepository.bitmapToBase64(bitmap)
+                    CachedWeather.imageBase64 = newBase64
+                    weatherRepository.saveBase64(newBase64, context)
                 } else {
-                    _bitmapState.value = imageRepository.base64ToBitmap(imageBase64)
+                    Log.i("MyLog", "Is not Null or Empty or isSkyBox")
+                    Log.i("MyLog", "Image base64 (skybox hash): ${CachedWeather.skyboxHash}")
+                    Log.i("MyLog", "Image base64 (current hash): ${currentHash}")
+                    _bitmapState.value = imageRepository.base64ToBitmap(currentBase64)
                 }
             } catch (e: Exception) {
-                Log.e("MyLog", "error image: ${e.message}")
+                Log.e("MyLog", "Image load error: ${e.message}")
             } finally {
                 _isLoadingState.value = false
             }
@@ -208,6 +221,7 @@ class WeatherViewModel(
                 val json = CachedWeather.weatherJSON
                 if (!json.isNullOrEmpty()) {
                     _weatherInfoState.value = weatherRepository.parseWeather(json)
+                    _imageBackState.value = weatherRepository.getWeatherCondition(_weatherInfoState.value)
                 }
                 _cityState.value = CachedWeather.cityName ?: ""
                 _bitmapState.value = imageRepository.base64ToBitmap(CachedWeather.imageBase64)

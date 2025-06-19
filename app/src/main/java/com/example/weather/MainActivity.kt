@@ -26,6 +26,7 @@ import com.example.weather.ui.viewmodel.WeatherViewModel
 import com.example.weather.ui.viewmodel.WeatherViewModelFactory
 import com.example.weather.utils.GeolocationUtils
 import com.example.weather.utils.isNetWorkAvailable
+import androidx.compose.runtime.getValue
 
 
 class MainActivity : ComponentActivity() {
@@ -42,6 +43,7 @@ class MainActivity : ComponentActivity() {
         val factory = WeatherViewModelFactory(weatherRepo, geoRepo, imgRepo)
 
         viewModel = ViewModelProvider(this, factory)[WeatherViewModel::class.java]
+
 
 
         setContent {
@@ -87,15 +89,17 @@ class MainActivity : ComponentActivity() {
                             viewModel.searchWeather(city, this@MainActivity)
                         })
                     }
+                    val imageBack by viewModel.imageBackState
+                    val bitmap by viewModel.bitmapState
                     Log.i("MyLog", "MainActivity: start change image background")
-                    LaunchedEffect(viewModel.imageBackState.value){
+                    LaunchedEffect(viewModel.imageBackState){
                         Log.i("MyLog", "MainActivity: info of background ${viewModel.imageBackState.value}")
                         val url =
                             "https://85.234.7.243:8443/img/v1/weatherimg/${viewModel.imageBackState.value}.png"
                         Log.i("MyLog", "MainActivity: info $url")
                         viewModel.loadImage(url, this@MainActivity)
                     }
-                    Background(viewModel.bitmapState.value)
+                    Background(viewModel.bitmapState)
                     Column {
                         Log.i("MyLog", "MainActivity: start MainCard")
                         MainCard(

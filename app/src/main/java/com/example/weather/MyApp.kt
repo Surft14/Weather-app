@@ -4,11 +4,13 @@ import android.app.Application
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Base64
+import android.util.Log
 import androidx.datastore.preferences.core.edit
 import com.example.weather.data.const.Const
 import com.example.weather.data.const.PreferencesKey
 import com.example.weather.data.dataStore
 import com.example.weather.logic.cache.CachedWeather
+import com.example.weather.utils.sha256
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import java.io.ByteArrayOutputStream
@@ -26,23 +28,25 @@ class MyApp: Application() {
         val dataStore = context.dataStore
         val preferences = dataStore.data.first()
         val currentTime = System.currentTimeMillis()
+
         CachedWeather.cityName = preferences[PreferencesKey.USER_CITY_KEY]
         val ts = preferences[PreferencesKey.TIME_MS_KEY] ?: 0L
+        CachedWeather.imageBase64 = preferences[PreferencesKey.IMAGE_BACKGROUND_KEY]
 
-        if (currentTime - ts <= Const.WEATHER_TTL_MS){
-            CachedWeather.weatherJSON = preferences[PreferencesKey.WEATHER_DATA_KEY]
-            CachedWeather.imageBase64 = preferences[PreferencesKey.IMAGE_BACKGROUND_KEY]
+        val stream = ByteArrayOutputStream()
+        val skyboxBitmap = BitmapFactory.decodeResource(resources, R.drawable.skybox)
+        skyboxBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
+        val skyboxBytes = stream.toByteArray()
+        val skyboxBase64 = Base64.encodeToString(skyboxBytes, Base64.DEFAULT)
+        CachedWeather.skyboxHash = skyboxBase64.sha256()
+
+        if (CachedWeather.imageBase64.isNullOrEmpty()) {
+            CachedWeather.imageBase64 = skyboxBase64
         }
-        if(CachedWeather.imageBase64.isNullOrEmpty()){
-            val stream = ByteArrayOutputStream()
-            val bitmap = BitmapFactory.decodeResource(resources, R.drawable.skybox)
-            bitmap?.compress(Bitmap.CompressFormat.PNG, 100, stream)
-            val byteArray = stream.toByteArray()
-            val imageDefault = Base64.encodeToString(byteArray, Base64.DEFAULT)
-            dataStore.edit { preferences ->
-                preferences[PreferencesKey.IMAGE_BACKGROUND_KEY] = imageDefault
-            }
-            CachedWeather.imageBase64 = imageDefault
+
+        if (currentTime - ts <= Const.WEATHER_TTL_MS) {
+            CachedWeather.weatherJSON = preferences[PreferencesKey.WEATHER_DATA_KEY]
         }
     }
+
 }

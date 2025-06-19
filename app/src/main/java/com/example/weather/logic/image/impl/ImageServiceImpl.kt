@@ -25,7 +25,7 @@ class ImageServiceImpl : ImageService {
 
     override suspend fun base64ToBitmap(encodedString: String?): Bitmap? {
         Log.d("MyLog", "Service image base64ToBitmap start")
-        if (encodedString.isNullOrEmpty()){
+        if (!encodedString.isNullOrEmpty()){
             val bytes = Base64.decode(encodedString, Base64.DEFAULT)
             return BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
         }else{
