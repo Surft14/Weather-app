@@ -7,6 +7,7 @@ import android.util.Base64
 import android.util.Log
 import androidx.datastore.preferences.core.edit
 import com.example.weather.data.const.Const
+import com.example.weather.data.const.Const.WEATHER_TTL_MS
 import com.example.weather.data.const.PreferencesKey
 import com.example.weather.data.dataStore
 import com.example.weather.logic.cache.CachedWeather
@@ -31,6 +32,12 @@ class MyApp: Application() {
 
         CachedWeather.cityName = preferences[PreferencesKey.USER_CITY_KEY]
         val ts = preferences[PreferencesKey.TIME_MS_KEY] ?: 0L
+        dataStore.edit { prefs ->
+            if (currentTime - ts > WEATHER_TTL_MS){
+                prefs.remove(PreferencesKey.WEATHER_DATA_KEY)
+                prefs.remove(PreferencesKey.IMAGE_BACKGROUND_KEY)
+            }
+        }
         CachedWeather.imageBase64 = preferences[PreferencesKey.IMAGE_BACKGROUND_KEY]
 
         val stream = ByteArrayOutputStream()
