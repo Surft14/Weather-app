@@ -70,14 +70,17 @@ class WeatherServerImpl() : WeatherServer {
                     date = hour.getString("date"),
 
                     temp = hour.getString("temp"),
+                    tempF = hour.getString("tempF"),
                     feelLike = hour.getString("feelLike"),
+                    feelLikeF = hour.getString("feelLikeF"),
 
                     icon = hour.getString("icon"),
                     text = hour.getString("text"),
                     code = hour.getInt("code"),
 
                     dir = hour.getString("dir"),
-                    speed = hour.getString("speed")
+                    speed = hour.getString("speed"),
+                    speedM = hour.getString("speedM")
                 )
             )
 
@@ -127,12 +130,17 @@ class WeatherServerImpl() : WeatherServer {
             val rawDate = mainObj.getString("dateTime")
             val formattedDate = rawDate.replace("T", " ")
             weatherNow.dateTime = formattedDate
+            weatherNow.date = mainObj.getString("date")
+            weatherNow.time = mainObj.getString("time")
             weatherNow.lastDateTime = mainObj.getString("lastUpdateTime")
 
             weatherNow.temp = mainObj.getString("temp")
+            weatherNow.tempF = mainObj.getString("tempF")
             weatherNow.feelLike = mainObj.getString("feelLike")
+            weatherNow.feelLikeF = mainObj.getString("feelLikeF")
             weatherNow.dir = mainObj.getString("dir")
             weatherNow.speed = mainObj.getString("speed")
+            weatherNow.speedM = mainObj.getString("speedM")
 
             weatherNow.text = mainObj.getString("text")
             weatherNow.icon = mainObj.getString("icon")
@@ -161,7 +169,9 @@ class WeatherServerImpl() : WeatherServer {
                     city = weathersItem.getString("city"),
                     date = weathersItem.getString("date"),
                     avgTemp = weathersItem.getString("avgTemp"),
+                    avgTempF = weathersItem.getString("avgTempF"),
                     maxWind = weathersItem.getString("maxWind"),
+                    maxWindM = weathersItem.getString("maxWindM"),
                     text = weathersItem.getString("text"),
                     icon = weathersItem.getString("icon"),
                     code = weathersItem.getInt("code")

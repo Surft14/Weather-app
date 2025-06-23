@@ -7,11 +7,16 @@ data class WeatherNow(
     var country: String = "",
 
     var dateTime: String = "",
+    var date: String = "",
+    var time: String = "",
     var lastDateTime: String = "",
 
     var temp: String = "",
+    var tempF: String = "",
     var feelLike: String = "",
+    var feelLikeF: String = "",
     var speed: String = "",
+    var speedM: String = "",
     var dir: String = "",
 
     var icon: String = "",

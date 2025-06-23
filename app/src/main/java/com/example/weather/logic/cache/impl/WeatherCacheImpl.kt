@@ -19,6 +19,7 @@ class WeatherCacheImpl : WeatherCache {
             if (System.currentTimeMillis() - ts > WEATHER_TTL_MS) {
                 prefs.remove(WEATHER_DATA_KEY)
                 prefs.remove(TIME_MS_KEY)
+                prefs.remove(PreferencesKey.IMAGE_BACKGROUND_KEY)
             }
         }
     }
@@ -64,6 +65,20 @@ class WeatherCacheImpl : WeatherCache {
         }
     }
 
+    override suspend fun readIsFahrenheit(context: Context): Boolean? {
+        Log.d("MyLog", "Cache readIsFahrenheit start")
+        val preferences = context.dataStore.data.first()
+        val isFahrenheit = preferences[PreferencesKey.IS_FAHRENHEIT]
+        return isFahrenheit
+    }
+
+    override suspend fun readIsMile(context: Context): Boolean? {
+        Log.d("MyLog", "Cache readIsMile start")
+        val preferences = context.dataStore.data.first()
+        val isMile = preferences[PreferencesKey.IS_MILE]
+        return isMile
+    }
+
     override suspend fun saveCity(city: String, context: Context) {
         Log.d("MyLog", "Cache saveCity start, ${city}")
         context.dataStore.edit { pref ->
@@ -91,5 +106,22 @@ class WeatherCacheImpl : WeatherCache {
             preferences[PreferencesKey.TIME_MS_KEY] = ts
         }
 
+    }
+
+    override suspend fun saveIsMile(isMile: Boolean, context: Context) {
+        Log.d("MyLog", "Cache saveIsMile start")
+        context.dataStore.edit { preferences ->
+            preferences[PreferencesKey.IS_MILE] = isMile
+        }
+    }
+
+    override suspend fun saveIsFahrenheit(
+        isFahrenheit: Boolean,
+        context: Context,
+    ) {
+        Log.d("MyLog", "Cache saveIsFahrenheit start")
+        context.dataStore.edit { preferences ->
+            preferences[PreferencesKey.IS_FAHRENHEIT] = isFahrenheit
+        }
     }
 }

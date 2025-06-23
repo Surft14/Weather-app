@@ -40,6 +40,8 @@ class MyApp: Application() {
             }
         }
         CachedWeather.imageBase64 = preferences[PreferencesKey.IMAGE_BACKGROUND_KEY]
+        CachedWeather.isMile = preferences[PreferencesKey.IS_MILE]
+        CachedWeather.isFahrenheit = preferences[PreferencesKey.IS_FAHRENHEIT]
 
         val stream = ByteArrayOutputStream()
         val skyboxBitmap = BitmapFactory.decodeResource(resources, R.drawable.skybox)
@@ -52,7 +54,7 @@ class MyApp: Application() {
             CachedWeather.imageBase64 = skyboxBase64
         }
 
-        if (currentTime - ts <= Const.WEATHER_TTL_MS) {
+        if (currentTime - ts <= WEATHER_TTL_MS) {
             CachedWeather.weatherJSON = preferences[PreferencesKey.WEATHER_DATA_KEY]
         }
     }

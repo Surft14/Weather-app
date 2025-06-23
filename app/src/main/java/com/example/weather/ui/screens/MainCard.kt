@@ -3,7 +3,9 @@ package com.example.weather.ui.screens
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -30,7 +32,15 @@ import com.example.weather.data.model.WeatherNow
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun MainCard(day: WeatherNow, onClickSync: () -> Unit, onClickSearch: () -> Unit) {
+fun MainCard(
+    day: WeatherNow,
+    isMile: Boolean,
+    isFahrenheit: Boolean,
+    onClickSync: () -> Unit,
+    onClickSearch: () -> Unit,
+    onClickF: () -> Unit,
+    onClickM: () -> Unit,
+) {
     Log.d("MyLog", "MainActivity: start MainCard")
     Column(
         modifier = Modifier
@@ -75,9 +85,15 @@ fun MainCard(day: WeatherNow, onClickSync: () -> Unit, onClickSearch: () -> Unit
                 )
                 Text(
 //Нынешняя температура и как ощущаеться
-                    "${day.temp.ifEmpty { 0 }}ºC/feel ${day.feelLike.ifEmpty { 0 }}ºC",
+                    text = if (isFahrenheit == false) {
+                        "${day.temp.ifEmpty { 0 }}ºC/feel ${day.feelLike.ifEmpty { 0 }}ºC"
+                    } else {
+                        "${day.tempF.ifEmpty { 0 }}ºF/feel ${day.feelLikeF.ifEmpty { 0 }}ºF"
+                    },
                     style = TextStyle(fontSize = 40.sp),
-                    modifier = Modifier.padding(10.dp),
+                    modifier = Modifier.padding(10.dp).clickable(onClick = {
+                        onClickF.invoke()
+                    }),
                 )
                 Text(
 // Погода
@@ -91,9 +107,16 @@ fun MainCard(day: WeatherNow, onClickSync: () -> Unit, onClickSearch: () -> Unit
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        text = "${day.speed} kph",
+                        text = if (isMile == false) {
+                            "${day.speed} kph"
+                        } else {
+                            "${day.speedM} mph"
+                        },
                         style = TextStyle(fontSize = 16.sp),
-                        modifier = Modifier.padding(end = 10.dp, top = 5.dp),
+                        modifier = Modifier.padding(end = 10.dp, top = 5.dp)
+                            .clickable(onClick = {
+                                onClickM.invoke()
+                            }),
                     )
                     Column(
                         modifier = Modifier.padding(start = 10.dp),

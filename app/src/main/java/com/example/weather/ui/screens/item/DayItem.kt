@@ -22,7 +22,7 @@ import com.example.weather.data.model.WeatherForecast
 import com.example.weather.ui.theme.BlueLight
 
 @Composable
-fun DayItem(day: WeatherForecast) {
+fun DayItem(day: WeatherForecast, isMile: Boolean, isFahrenheit: Boolean) {
     Log.d("MyLog", "DayItem start")
     Card(
         modifier = Modifier
@@ -60,7 +60,11 @@ fun DayItem(day: WeatherForecast) {
                 }
             }
             Text(
-                "${day.avgTemp}ºC",
+                if (isFahrenheit == false) {
+                    "${day.avgTemp}ºC"
+                } else {
+                    "${day.avgTempF}ºF"
+                },
                 color = Color.White,
                 style = TextStyle(fontSize = 30.sp)
             )

@@ -33,6 +33,8 @@ import kotlinx.coroutines.launch
 fun TabLayout(
     daysList: List<WeatherForecast>,
     hourList: List<WeatherHour>,
+    isMile: Boolean,
+    isFahrenheit: Boolean,
 ) {// Находиться ниже Main card
     Log.d("MyLog", "TabLayout: start TabLayout")
     val tabList = listOf("Hours", "Days")
@@ -78,15 +80,15 @@ fun TabLayout(
             Log.i("MyLog", "TabLayout ${hourList}")
             val currentList = when (Index) {
                 0 -> LazyColumn(modifier = Modifier.fillMaxSize()) {
-                    items(hourList) { HourItem(it) }
+                    items(hourList) { HourItem(it, isMile, isFahrenheit) }
                 }
 
                 1 -> LazyColumn(modifier = Modifier.fillMaxSize()) {
-                    items(daysList) { DayItem(it) }
+                    items(daysList) { DayItem(it, isMile, isFahrenheit) }
                 }
 
                 else -> LazyColumn(modifier = Modifier.fillMaxSize()) {
-                    items(daysList) { DayItem(it) }
+                    items(daysList) { DayItem(it, isMile, isFahrenheit) }
                 }
             }
         }

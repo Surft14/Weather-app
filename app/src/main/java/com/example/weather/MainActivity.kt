@@ -89,8 +89,6 @@ class MainActivity : ComponentActivity() {
                             viewModel.searchWeather(city, this@MainActivity)
                         })
                     }
-                    val imageBack by viewModel.imageBackState
-                    val bitmap by viewModel.bitmapState
                     Log.i("MyLog", "MainActivity: start change image background")
                     LaunchedEffect(viewModel.imageBackState){
                         Log.i("MyLog", "MainActivity: info of background ${viewModel.imageBackState.value}")
@@ -104,17 +102,29 @@ class MainActivity : ComponentActivity() {
                         Log.i("MyLog", "MainActivity: start MainCard")
                         MainCard(
                             viewModel.weatherInfoState.value?.weatherNow ?: WeatherNow(),
+                            isMile = viewModel.isMileState.value,
+                            isFahrenheit = viewModel.isFahrenheitState.value,
                             onClickSync = {
                                 viewModel.refreshWeather(this@MainActivity)
                             },
                             onClickSearch = {
                                 viewModel.showDialog()
+                            },
+                            onClickM = {
+                                val isMile = viewModel.isMileState.value
+                                viewModel.setMile(!isMile, this@MainActivity)
+                            },
+                            onClickF = {
+                                val isFahr = viewModel.isFahrenheitState.value
+                                viewModel.setFahrenheit(!isFahr, this@MainActivity)
                             }
                         )
                         Log.i("MyLog", "MainActivity: start TabLayout")
                         TabLayout(
                             viewModel.weatherInfoState.value?.listWeatherForecast ?: listOf(),
                             viewModel.weatherInfoState.value?.listWeatherHour ?: listOf(),
+                            isMile = viewModel.isMileState.value,
+                            isFahrenheit = viewModel.isFahrenheitState.value
                         )
                     }
                 }

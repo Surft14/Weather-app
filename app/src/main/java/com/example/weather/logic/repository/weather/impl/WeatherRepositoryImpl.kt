@@ -97,6 +97,16 @@ class WeatherRepositoryImpl(
         return weatherCache.readBase64(context)
     }
 
+    override suspend fun readIsFahrenheit(context: Context): Boolean? {
+        Log.d("MyLog", "repository readIsFahrenheit start")
+        return weatherCache.readIsFahrenheit(context)
+    }
+
+    override suspend fun readIsMile(context: Context): Boolean? {
+        Log.d("MyLog", "repository readIsMile start")
+        return weatherCache.readIsMile(context)
+    }
+
     override suspend fun saveCity(city: String, context: Context) {
         Log.d("MyLog", "repository saveCity start")
         return weatherCache.saveCity(city, context)
@@ -111,6 +121,19 @@ class WeatherRepositoryImpl(
     override suspend fun saveBase64(image: String, context: Context) {
         Log.d("MyLog", "repository saveBase64 start")
         weatherCache.saveBase64(image, context)
+    }
+
+    override suspend fun saveIsMile(isMile: Boolean, context: Context) {
+        Log.d("MyLog", "repository saveIsMile start")
+        weatherCache.saveIsMile(isMile, context)
+    }
+
+    override suspend fun saveIsFahrenheit(
+        isFahrenheit: Boolean,
+        context: Context,
+    ) {
+        Log.d("MyLog", "repository saveIsMile start")
+        weatherCache.saveIsFahrenheit(isFahrenheit, context)
     }
 
     override suspend fun getWeatherCondition(day: WeatherInfo?): String {

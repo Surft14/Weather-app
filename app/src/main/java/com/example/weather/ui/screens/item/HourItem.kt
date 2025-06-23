@@ -22,7 +22,7 @@ import com.example.weather.data.model.WeatherHour
 import com.example.weather.ui.theme.BlueLight
 
 @Composable
-fun HourItem(hour: WeatherHour) {
+fun HourItem(hour: WeatherHour, isMile: Boolean, isFahrenheit: Boolean) {
     Log.d("MyLog", "HourItem start")
     Card(
         modifier = Modifier
@@ -58,10 +58,10 @@ fun HourItem(hour: WeatherHour) {
                         )
                     )
                     Text(
-                        text = if (hour.speed.isEmpty()) {
-                            ""
-                        } else {
+                        text = if (isMile == false) {
                             hour.speed + " kph"
+                        } else {
+                            hour.speedM + " mph"
                         },
                         color = Color.White,
                         style = TextStyle(fontSize = 20.sp),
@@ -70,7 +70,11 @@ fun HourItem(hour: WeatherHour) {
                 }
             }
             Text(
-                "${hour.temp}ºC",
+                if (isFahrenheit == false) {
+                    "${hour.temp}ºC"
+                } else {
+                    "${hour.tempF}ºF"
+                },
                 color = Color.White,
                 style = TextStyle(fontSize = 30.sp)
             )

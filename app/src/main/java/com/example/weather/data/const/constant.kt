@@ -1,5 +1,6 @@
 package com.example.weather.data.const
 
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 
@@ -12,6 +13,8 @@ object PreferencesKey{
     val USER_CITY_KEY = stringPreferencesKey("userCity")
     val IMAGE_BACKGROUND_KEY = stringPreferencesKey("imageBackRound")
     val TIME_MS_KEY = longPreferencesKey("timeMsKey")
+    val IS_MILE = booleanPreferencesKey("isMile")
+    val IS_FAHRENHEIT = booleanPreferencesKey("isFahrenheit")
 }
 
 object WeatherCodes {

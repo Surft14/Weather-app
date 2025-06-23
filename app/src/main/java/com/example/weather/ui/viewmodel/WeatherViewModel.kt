@@ -44,8 +44,40 @@ class WeatherViewModel(
     private val _bitmapState = mutableStateOf<Bitmap?>(null)
     val bitmapState: State<Bitmap?> = _bitmapState
 
+    private val _isMileState = mutableStateOf(false)
+    val isMileState: State<Boolean> = _isMileState
+
+    private val _isFahrenheitState = mutableStateOf(false)
+    val isFahrenheitState: State<Boolean> = _isFahrenheitState
+
     init {
         loadFromCache()
+    }
+
+    fun setMile(_is: Boolean, context: Context){
+        Log.d("MyLog", "ViewModel setMile start")
+        viewModelScope.launch {
+            try {
+                _isMileState.value = _is
+                weatherRepository.saveIsMile(_isMileState.value, context)
+            }catch (e: Exception){
+                Log.e("MyLog", "Error in setMile: ${e.message}")
+                _errorState.value = "Error in setMile"
+            }
+        }
+    }
+
+    fun setFahrenheit(_is: Boolean, context: Context){
+        Log.d("MyLog", "ViewModel setFahrenheit start")
+        viewModelScope.launch {
+            try {
+                _isFahrenheitState.value = _is
+                weatherRepository.saveIsFahrenheit(_isFahrenheitState.value, context)
+            }catch (e: Exception){
+                Log.e("MyLog", "Error in setFahrenheit: ${e.message}")
+                _errorState.value = "Error in setFahrenheit"
+            }
+        }
     }
 
     fun loadWeather(city: String, context: Context) {
@@ -223,6 +255,8 @@ class WeatherViewModel(
                     _weatherInfoState.value = weatherRepository.parseWeather(json)
                     _imageBackState.value = weatherRepository.getWeatherCondition(_weatherInfoState.value)
                 }
+                _isMileState.value = CachedWeather.isMile ?: false
+                _isFahrenheitState.value = CachedWeather.isFahrenheit ?: false
                 _cityState.value = CachedWeather.cityName ?: ""
                 _bitmapState.value = imageRepository.base64ToBitmap(CachedWeather.imageBase64)
             } catch (e: Exception) {
