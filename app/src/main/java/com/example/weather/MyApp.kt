@@ -36,6 +36,7 @@ class MyApp: Application() {
             if (currentTime - ts > WEATHER_TTL_MS){
                 prefs.remove(PreferencesKey.WEATHER_DATA_KEY)
                 prefs.remove(PreferencesKey.IMAGE_BACKGROUND_KEY)
+                prefs.remove(PreferencesKey.TIME_MS_KEY)
             }
         }
         CachedWeather.imageBase64 = preferences[PreferencesKey.IMAGE_BACKGROUND_KEY]
