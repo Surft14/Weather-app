@@ -48,7 +48,6 @@ class MainActivity : ComponentActivity() {
         viewModel = ViewModelProvider(this, factory)[WeatherViewModel::class.java]
 
 
-
         setContent {
             WeatherTheme {
                 var hasPermission by remember { mutableStateOf(false) }
@@ -63,14 +62,25 @@ class MainActivity : ComponentActivity() {
                             Log.i("MyLog", "MainActivity: City from ViewModel is blank")
                             viewModel.loadCity(this@MainActivity)
 
+                            val url =
+                                "https://85.234.7.243:8443/img/v1/weatherimg/${viewModel.imageBackState.value}.png"
+                            viewModel.loadImage(url, this@MainActivity)
+
                             if (isNetWorkAvailable(this@MainActivity)) {
                                 Log.i("MyLog", "MainActivity: loading city and weather data with viewmodel")
                                 viewModel.loadCityAndWeather(this@MainActivity)
+                                val url =
+                                    "https://85.234.7.243:8443/img/v1/weatherimg/${viewModel.imageBackState.value}.png"
+                                viewModel.loadImage(url, this@MainActivity)
                             }
                         } else {
                             if (isNetWorkAvailable(this@MainActivity)) {
                                 Log.i("MyLog", "MainActivity: loading weather by known city")
                                 viewModel.loadWeather(viewModel.cityState.value, this@MainActivity)
+                                val url =
+                                    "https://85.234.7.243:8443/img/v1/weatherimg/${viewModel.imageBackState.value}.png"
+                                viewModel.loadImage(url, this@MainActivity)
+
                             }
                         }
                     }
