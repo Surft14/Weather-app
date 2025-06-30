@@ -1,11 +1,14 @@
 package com.example.weather.utils
 
+import android.content.pm.PackageManager
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
-import java.util.jar.Manifest
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat
 
 object GeolocationUtils {
     private val permissions = arrayOf(
@@ -14,21 +17,33 @@ object GeolocationUtils {
     )
 
     @Composable
-    fun GetGeolocationPermission() {
-        val pLauncher =
-            rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestMultiplePermissions())
-            { isGranted ->
-                permissions.forEach { perm ->
-                    if (isGranted[perm] == true) {
-                        Log.d("MyLog", "Permission $perm has been granted")
-                    } else {
-                        Log.w("MyLog", "Permission $perm has not been granted")
-                    }
-                }
-            }
+    fun getGeolocationPermission(onPermissionGranted: () -> Unit) {
+        val context = LocalContext.current
 
-        SideEffect {
-            pLauncher.launch(permissions)
+        val pLauncher = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.RequestMultiplePermissions()
+        ) { isGranted ->
+            val granted = permissions.any { isGranted[it] == true }
+            if (granted) {
+                Log.d("MyLog", "Permissions granted")
+                onPermissionGranted()
+            } else {
+                Log.w("MyLog", "Permissions denied")
+            }
+        }
+
+        // Запрашиваем разрешение после монтирования
+        LaunchedEffect(Unit) {
+            val allGranted = permissions.all {
+                ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
+            }
+            if (allGranted) {
+                Log.d("MyLog", "Permissions already granted")
+                onPermissionGranted()
+            } else {
+                Log.d("MyLog", "Requesting permissions...")
+                pLauncher.launch(permissions)
+            }
         }
     }
 }

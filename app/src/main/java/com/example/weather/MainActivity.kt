@@ -27,6 +27,9 @@ import com.example.weather.ui.viewmodel.WeatherViewModelFactory
 import com.example.weather.utils.GeolocationUtils
 import com.example.weather.utils.isNetWorkAvailable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 
 
 class MainActivity : ComponentActivity() {
@@ -48,37 +51,27 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             WeatherTheme {
-                GeolocationUtils.GetGeolocationPermission()
-                LaunchedEffect(Unit) {
-                    if (viewModel.cityState.value.isNullOrEmpty()) {
-                        Log.i("MyLog", "MainActivity: City from ViewModel is blank")
-                        if (ContextCompat.checkSelfPermission(
-                                this@MainActivity,
-                                Manifest.permission.ACCESS_FINE_LOCATION
-                            ) == PackageManager.PERMISSION_GRANTED
-                            && ContextCompat.checkSelfPermission(
-                                this@MainActivity,
-                                Manifest.permission.ACCESS_COARSE_LOCATION
-                            ) == PackageManager.PERMISSION_GRANTED
-                        ) {
-                            Log.i("MyLog", "MainActivity: loading city with viewmodel")
+                var hasPermission by remember { mutableStateOf(false) }
+
+                GeolocationUtils.getGeolocationPermission {
+                    hasPermission = true
+                }
+
+                if (hasPermission) {
+                    LaunchedEffect(Unit) {
+                        if (viewModel.cityState.value.isBlank()) {
+                            Log.i("MyLog", "MainActivity: City from ViewModel is blank")
                             viewModel.loadCity(this@MainActivity)
 
                             if (isNetWorkAvailable(this@MainActivity)) {
-                                Log.i(
-                                    "MyLog",
-                                    "MainActivity: loading city and weather data with viewmodel (merged)"
-                                )
+                                Log.i("MyLog", "MainActivity: loading city and weather data with viewmodel")
                                 viewModel.loadCityAndWeather(this@MainActivity)
                             }
-                        }
-                    } else{
-                        if (isNetWorkAvailable(this@MainActivity)) {
-                            Log.i(
-                                "MyLog",
-                                "MainActivity: loading weather data with viewmodel (merged)"
-                            )
-                            viewModel.loadWeather(viewModel.cityState.value, this@MainActivity)
+                        } else {
+                            if (isNetWorkAvailable(this@MainActivity)) {
+                                Log.i("MyLog", "MainActivity: loading weather by known city")
+                                viewModel.loadWeather(viewModel.cityState.value, this@MainActivity)
+                            }
                         }
                     }
                 }

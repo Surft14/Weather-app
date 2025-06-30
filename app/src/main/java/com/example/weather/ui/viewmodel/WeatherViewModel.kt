@@ -95,6 +95,9 @@ class WeatherViewModel(
                 }
                 _weatherInfoState.value = weatherInfo
                 loadCodeImage(weatherInfo)
+                val url =
+                    "https://85.234.7.243:8443/img/v1/weatherimg/${imageBackState.value}.png"
+                loadImage(url, context)
                 if (_cityState.value != city) {
                     _cityState.value = city
                 }
@@ -116,6 +119,9 @@ class WeatherViewModel(
                     weatherRepository.searchAndParseWeather(city, context)
                 _weatherInfoState.value = weatherInfo
                 loadCodeImage(weatherInfo)
+                val url =
+                    "https://85.234.7.243:8443/img/v1/weatherimg/${imageBackState.value}.png"
+                loadImage(url, context)
             } catch (e: Exception) {
                 Log.e("MyLog", "Error in search weather data: ${e.message}")
                 _errorState.value = "Error in search weather data  ${e.message}"
@@ -134,6 +140,9 @@ class WeatherViewModel(
                 val weatherInfo = weatherRepository.fetchAndParseWeather(city, context)
                 _weatherInfoState.value = weatherInfo
                 loadCodeImage(weatherInfo)
+                val url =
+                    "https://85.234.7.243:8443/img/v1/weatherimg/${imageBackState.value}.png"
+                loadImage(url, context)
             } catch (e: Exception) {
                 Log.e("MyLog", "Error refreshing weather: ${e.message}")
                 _errorState.value = "Error refreshing weather ${e.message}"
@@ -160,10 +169,16 @@ class WeatherViewModel(
                     val weatherInfo = weatherRepository.fetchAndParseWeather(city, context)
                     _weatherInfoState.value = weatherInfo
                     loadCodeImage(weatherInfo)
+                    val url =
+                        "https://85.234.7.243:8443/img/v1/weatherimg/${imageBackState.value}.png"
+                    loadImage(url, context)
                 } else if (json != null) {
                     val weatherInfo = weatherRepository.parseWeather(json)
                     _weatherInfoState.value = weatherInfo
                     loadCodeImage(weatherInfo)
+                    val url =
+                        "https://85.234.7.243:8443/img/v1/weatherimg/${imageBackState.value}.png"
+                    loadImage(url, context)
                 } else {
                     Log.e("MyLog", "Error load city")
                     _errorState.value = "Couldn't identify the city"
@@ -184,7 +199,7 @@ class WeatherViewModel(
             try {
                 val cachedCity = weatherRepository.readUserCity(context)
                 val city = cachedCity ?: geolocationRepository.getCity(context)
-
+                Log.i("MyLog", "ViewModel loadCity $city")
                 if (!city.isNullOrEmpty() && _cityState.value != city) {
                     _cityState.value = city
                     weatherRepository.saveCity(city, context)
