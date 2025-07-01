@@ -39,7 +39,6 @@ class MyApp: Application() {
                 prefs.remove(PreferencesKey.TIME_MS_KEY)
             }
         }
-        CachedWeather.imageBase64 = preferences[PreferencesKey.IMAGE_BACKGROUND_KEY]
         CachedWeather.isMile = preferences[PreferencesKey.IS_MILE]
         CachedWeather.isFahrenheit = preferences[PreferencesKey.IS_FAHRENHEIT]
 
@@ -54,8 +53,9 @@ class MyApp: Application() {
             CachedWeather.imageBase64 = skyboxBase64
         }
 
-        if (currentTime - ts <= WEATHER_TTL_MS) {
+        if (currentTime - ts < WEATHER_TTL_MS) {
             CachedWeather.weatherJSON = preferences[PreferencesKey.WEATHER_DATA_KEY]
+            CachedWeather.imageBase64 = preferences[PreferencesKey.IMAGE_BACKGROUND_KEY]
         }
     }
 
