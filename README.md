@@ -50,20 +50,24 @@
 |    |    ├── const
 |    |    ├── model
 |    |    ├── DataStoreExtensions.kt
+|    |
 |    ├── logic
 |    |    ├── cache
 |    |    ├── geo
 |    |    ├── image
 |    |    ├── network
 |    |    ├── repository
+|    |    
 |    ├── ui
 |    |    ├── screens
 |    |    ├── theme
 |    |    ├── viewmodel
+|    |
 |    ├── utils
 |    |    ├── GeolocationUtils
 |    |    ├── sha256.kt
 |    |    ├── isNetworlAvailable.kt
+|    |
 |    ├── MainACtivity
 |    ├── MyApp
 |    ├── res
@@ -71,7 +75,8 @@
 |    |    ├── mipmap
 |    |    ├── raw
 |    |    ├── values
-|    |    ├── xml    
+|    |    ├── xml
+|    
 ├── build.gradle
 
 ```
